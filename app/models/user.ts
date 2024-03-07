@@ -2,9 +2,11 @@ import { DateTime } from 'luxon'
 import { withAuthFinder } from '@adonisjs/auth'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, manyToMany } from '@adonisjs/lucid/orm'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import Playlist from './playlist.js'
+import type { Role } from '#types/user'
+import { randomUUID, type UUID } from 'node:crypto'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -13,7 +15,10 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
 
 export default class User extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
-  declare id: string
+  declare id: UUID
+
+  @column()
+  declare role: Role
 
   @column()
   declare userName: string
@@ -44,4 +49,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @manyToMany(() => Playlist)
   declare playlists: ManyToMany<typeof Playlist>
+
+  @beforeCreate()
+  static async createUUID(user: User) {
+    user.id = randomUUID() as UUID
+  }
 }

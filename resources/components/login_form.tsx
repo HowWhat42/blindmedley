@@ -7,6 +7,7 @@ import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { LoaderIcon } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import { router } from '@inertiajs/react'
 
 const LoginFormSchema = z.object({
   email: z.string().email(),
@@ -28,7 +29,17 @@ const LoginForm = () => {
   })
 
   const onSubmit = (values: LoginFormValues) => {
-    console.log(values)
+    router.post('/login', values, {
+      onStart: () => {
+        setIsLoading(true)
+      },
+      onSuccess: () => {
+        setIsLoading(false)
+      },
+      onError: () => {
+        setIsLoading(false)
+      },
+    })
   }
 
   return (
@@ -38,7 +49,7 @@ const LoginForm = () => {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={() => form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="email"

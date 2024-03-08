@@ -1,14 +1,18 @@
-import AuthDialog from '../components/auth_dialog'
-import { Head } from '@inertiajs/react'
+import { Button } from '../components/ui/button'
+import { Head, router } from '@inertiajs/react'
 
 export default function Home(props: { version: number }) {
+  const handleLogout = () => {
+    router.post('/logout')
+  }
+
   return (
     <>
       <Head title="Homepage" />
 
       <div>
         <div className="text-red-500">AdonisJS {props.version} x Inertia x React</div>
-        <AuthDialog />
+        <Button onClick={handleLogout}>Log out</Button>
       </div>
     </>
   )

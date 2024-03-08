@@ -1,23 +1,23 @@
 import User from '#models/user'
 import AuthService from '#services/auth_service'
+import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
+@inject()
 export default class AuthController {
   constructor(private authService: AuthService) {}
 
-  async login({ auth, request, session, response }: HttpContext) {
+  async login({ auth, request, response }: HttpContext) {
     const { email, password } = request.all()
 
     const user = await User.verifyCredentials(email, password)
 
     await auth.use('web').login(user)
 
-    session.put('authenticated_user', user.id)
-
     return response.redirect('/')
   }
 
-  async register({ auth, session, request, response }: HttpContext) {
+  async register({ auth, request, response }: HttpContext) {
     const { userName, email, password } = request.all()
 
     const user = await this.authService.createUser({
@@ -29,13 +29,11 @@ export default class AuthController {
 
     await auth.use('web').login(user)
 
-    session.put('authenticated_user', user.id)
-
-    return response.created(user)
+    return response.redirect('/')
   }
 
-  async me({ response, session }: HttpContext) {
-    const userId = session.get('authenticated_user')
+  async me({ auth, response }: HttpContext) {
+    const userId = auth.use('web').user?.id
 
     if (!userId) {
       return response.status(401)
@@ -50,9 +48,8 @@ export default class AuthController {
     return response.ok(user)
   }
 
-  async logout({ session, auth, response }: HttpContext) {
-    session.forget('authenticated_user')
+  async logout({ auth, response }: HttpContext) {
     await auth.use('web').logout()
-    return response.redirect('/login')
+    return response.redirect('/auth')
   }
 }

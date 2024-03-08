@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { useForm } from 'react-hook-form'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
@@ -7,13 +7,29 @@ import { Button } from './ui/button'
 import { LoaderIcon } from 'lucide-react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { router } from '@inertiajs/react'
 
-const RegisterFormSchema = z.object({
-  userName: z.string().min(3),
-  email: z.string().email(),
-  password: z.string().min(8),
-  confirmPassword: z.string().min(8),
-})
+const RegisterFormSchema = z
+  .object({
+    userName: z.string().min(3),
+    email: z.string().email(),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters long')
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character'
+      ),
+    confirmPassword: z.string().min(8),
+  })
+  .superRefine(({ confirmPassword, password }, ctx) => {
+    if (confirmPassword !== password) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'The passwords did not match',
+      })
+    }
+  })
 
 type RegisterFormValues = z.infer<typeof RegisterFormSchema>
 
@@ -32,7 +48,17 @@ const RegisterForm = () => {
   })
 
   const onSubmit = (values: RegisterFormValues) => {
-    console.log(values)
+    router.post('/register', values, {
+      onStart: () => {
+        setIsLoading(true)
+      },
+      onSuccess: () => {
+        setIsLoading(false)
+      },
+      onError: () => {
+        setIsLoading(false)
+      },
+    })
   }
 
   return (
@@ -42,7 +68,7 @@ const RegisterForm = () => {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={() => form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="userName"

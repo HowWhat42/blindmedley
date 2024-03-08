@@ -11,9 +11,19 @@ const AuthDialog = () => {
   return (
     <div className="w-1/3">
       <Tabs defaultValue={AuthDialogTab.login}>
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value={AuthDialogTab.login}>Login</TabsTrigger>
-          <TabsTrigger value={AuthDialogTab.register}>Register</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-violet-200">
+          <TabsTrigger
+            className={'data-[state=active]:bg-violet-500 data-[state=active]:text-white'}
+            value={AuthDialogTab.login}
+          >
+            Login
+          </TabsTrigger>
+          <TabsTrigger
+            className={'data-[state=active]:bg-violet-500 data-[state=active]:text-white'}
+            value={AuthDialogTab.register}
+          >
+            Register
+          </TabsTrigger>
         </TabsList>
         <TabsContent value={AuthDialogTab.login}>
           <LoginForm />

@@ -43,9 +43,9 @@ const LoginForm = () => {
   }
 
   return (
-    <Card>
+    <Card className="bg-violet-100 border border-violet-300">
       <CardHeader>
-        <CardTitle>Login</CardTitle>
+        <CardTitle className="font-geist text-neutral-800">Login</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -55,7 +55,7 @@ const LoginForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-neutral-800 text-base">Email</FormLabel>
                   <FormControl>
                     <Input {...field} type="email" />
                   </FormControl>
@@ -69,7 +69,7 @@ const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-neutral-800 text-base">Password</FormLabel>
                   <FormControl>
                     <Input {...field} type="password" />
                   </FormControl>

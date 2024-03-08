@@ -62,9 +62,9 @@ const RegisterForm = () => {
   }
 
   return (
-    <Card>
+    <Card className="bg-violet-100 border border-violet-300">
       <CardHeader>
-        <CardTitle>Register</CardTitle>
+        <CardTitle className="font-geist text-neutral-800">Register</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -74,7 +74,7 @@ const RegisterForm = () => {
               name="userName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel className="text-neutral-800 text-base">Username</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -88,7 +88,7 @@ const RegisterForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-neutral-800 text-base">Email</FormLabel>
                   <FormControl>
                     <Input {...field} type="email" />
                   </FormControl>
@@ -103,7 +103,7 @@ const RegisterForm = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-neutral-800 text-base">Password</FormLabel>
                     <FormControl>
                       <Input {...field} type="password" />
                     </FormControl>
@@ -116,7 +116,7 @@ const RegisterForm = () => {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Confirm password</FormLabel>
+                    <FormLabel className="text-neutral-800 text-base">Confirm password</FormLabel>
                     <FormControl>
                       <Input {...field} type="password" />
                     </FormControl>

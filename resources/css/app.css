@@ -11,6 +11,6 @@
 }
 
 body {
-    font-family: 'Urbanist', sans-serif;
-    @apply bg-purple-100;
+  font-family: 'Urbanist', sans-serif;
+  @apply bg-purple-100;
 }

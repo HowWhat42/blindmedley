@@ -2,6 +2,8 @@ import './css/app.css'
 
 import { createRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react'
+import { Layout } from './components/Layout/layout'
+import { ThemeProvider } from './components/theme_provider'
 
 const appName = import.meta.env.VITE_APP_NAME || 'BlindMedley'
 
@@ -17,6 +19,14 @@ createInertiaApp({
 
   setup({ el, App, props }) {
     const root = createRoot(el)
-    root.render(<App {...props} />)
+
+    const user = props.initialPage.props.user
+    root.render(
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <Layout user={user}>
+          <App {...props} />
+        </Layout>
+      </ThemeProvider>
+    )
   },
 })

@@ -1,18 +1,16 @@
-import { Button } from '../components/ui/button'
-import { Head, router } from '@inertiajs/react'
+import { Head, usePage } from '@inertiajs/react'
 
 export default function Home(props: { version: number }) {
-  const handleLogout = () => {
-    router.post('/logout')
-  }
+  const { user } = usePage<any>().props
 
   return (
     <>
       <Head title="Homepage" />
 
       <div>
-        <div className="text-red-500">AdonisJS {props.version} x Inertia x React</div>
-        <Button onClick={handleLogout}>Log out</Button>
+        <h2 className="text-3xl text-neutral-900 dark:text-purple-100 font-bold font-geist">
+          Welcome, {user.userName}
+        </h2>
       </div>
     </>
   )

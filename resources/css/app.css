@@ -12,5 +12,5 @@
 
 body {
     font-family: 'Urbanist', sans-serif;
-    @apply bg-purple-50;
+    @apply bg-purple-100;
 }

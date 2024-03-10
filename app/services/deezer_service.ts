@@ -110,18 +110,26 @@ export interface SearchTrack {
 
 export default class DeezerService {
   async getPlaylist(playlistId: string): Promise<Playlist> {
-    return fetch(`https://api.deezer.com/playlist/${playlistId}`).then((res) => res.json())
+    return fetch(`https://api.deezer.com/playlist/${playlistId}`).then((res) =>
+      res.json()
+    ) as Promise<Playlist>
   }
 
   async getTrack(trackId: string): Promise<Track> {
-    return fetch(`https://api.deezer.com/track/${trackId}`).then((res) => res.json())
+    return fetch(`https://api.deezer.com/track/${trackId}`).then((res) =>
+      res.json()
+    ) as Promise<Track>
   }
 
   async getArtist(artistId: string): Promise<Artist> {
-    return fetch(`https://api.deezer.com/artist/${artistId}`).then((res) => res.json())
+    return fetch(`https://api.deezer.com/artist/${artistId}`).then((res) =>
+      res.json()
+    ) as Promise<Artist>
   }
 
   async searchTrack(query: string): Promise<SearchTrack> {
-    return fetch(`https://api.deezer.com/search?q=track:"${query}"`).then((res) => res.json())
+    return fetch(`https://api.deezer.com/search?q=track:"${query}"`).then((res) =>
+      res.json()
+    ) as Promise<SearchTrack>
   }
 }

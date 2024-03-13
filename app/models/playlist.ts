@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
-import Song from './song.js'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import User from './user.js'
+import Track from './track.js'
 
 export default class Playlist extends BaseModel {
   @column({ isPrimary: true })
@@ -20,8 +20,8 @@ export default class Playlist extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @manyToMany(() => Song)
-  declare songs: ManyToMany<typeof Song>
+  @manyToMany(() => Track)
+  declare tracks: ManyToMany<typeof Track>
 
   @manyToMany(() => User)
   declare users: ManyToMany<typeof User>

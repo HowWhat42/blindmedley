@@ -3,7 +3,7 @@ import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
 import Playlist from './playlist.js'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 
-export default class Song extends BaseModel {
+export default class Track extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 

@@ -1,4 +1,6 @@
-export interface Playlist {
+import { Artist, MusicService, Playlist, SearchResult, Track } from './music_service.js'
+
+export interface DeezerPlaylist {
   id: number
   title: string
   description: string
@@ -20,30 +22,19 @@ export interface Playlist {
   creation_date: string
   md5_image: string
   picture_type: string
-  creator: Creator
+  creator: DeezerCreator
   type: string
-  tracks: Tracks
+  tracks: { data: DeezerTrack[] }
 }
 
-export interface Creator {
+export interface DeezerCreator {
   id: number
   name: string
   tracklist: string
-  type: CreatorType
   link?: string
 }
 
-export enum CreatorType {
-  Artist = 'artist',
-  User = 'user',
-}
-
-export interface Tracks {
-  data: Track[]
-  checksum: string
-}
-
-export interface Track {
+export interface DeezerTrack {
   id: number
   readable: boolean
   title: string
@@ -64,14 +55,14 @@ export interface Track {
   bpm: number
   gain: number
   available_countries: string[]
-  contributors: Artist[]
+  contributors: DeezerArtist[]
   md5_image: string
-  artist: Artist
-  album: Album
+  artist: DeezerArtist
+  album: DeezerAlbum
   type: string
 }
 
-export interface Album {
+export interface DeezerAlbum {
   id: number
   title: string
   link: string
@@ -86,7 +77,7 @@ export interface Album {
   type: string
 }
 
-export interface Artist {
+export interface DeezerArtist {
   id: number
   name: string
   link: string
@@ -103,33 +94,67 @@ export interface Artist {
 }
 
 export interface SearchTrack {
-  data: Track[]
+  data: DeezerTrack[]
   total: number
   next: string
 }
 
-export default class DeezerService {
+export default class DeezerService extends MusicService {
   async getPlaylist(playlistId: string): Promise<Playlist> {
-    return fetch(`https://api.deezer.com/playlist/${playlistId}`).then((res) =>
-      res.json()
-    ) as Promise<Playlist>
+    const playlist = await fetch(`https://api.deezer.com/playlist/${playlistId}`).then(
+      (res) => res.json() as Promise<DeezerPlaylist>
+    )
+
+    return {
+      id: playlist.id.toString(),
+      title: playlist.title,
+      tracks: playlist.tracks.data.map((track) => ({
+        id: track.id.toString(),
+        title: track.title,
+        artist: track.artist.name,
+        preview_url: track.preview,
+      })),
+    }
   }
 
   async getTrack(trackId: string): Promise<Track> {
-    return fetch(`https://api.deezer.com/track/${trackId}`).then((res) =>
-      res.json()
-    ) as Promise<Track>
+    const track = await fetch(`https://api.deezer.com/track/${trackId}`).then(
+      (res) => res.json() as Promise<DeezerTrack>
+    )
+
+    return {
+      id: track.id.toString(),
+      title: track.title,
+      artist: track.artist.name,
+      preview_url: track.preview,
+    }
   }
 
   async getArtist(artistId: string): Promise<Artist> {
-    return fetch(`https://api.deezer.com/artist/${artistId}`).then((res) =>
-      res.json()
-    ) as Promise<Artist>
+    const artist = await fetch(`https://api.deezer.com/artist/${artistId}`).then(
+      (res) => res.json() as Promise<DeezerArtist>
+    )
+
+    return {
+      id: artist.id.toString(),
+      name: artist.name,
+    }
   }
 
-  async searchTrack(query: string): Promise<SearchTrack> {
-    return fetch(`https://api.deezer.com/search?q=track:"${query}"`).then((res) =>
-      res.json()
-    ) as Promise<SearchTrack>
+  async search(query: string): Promise<SearchResult> {
+    const searchResult = await fetch(`https://api.deezer.com/search?q=track:"${query}"`).then(
+      (res) => res.json() as Promise<SearchTrack>
+    )
+
+    return {
+      tracks: searchResult.data.map((track) => ({
+        id: track.id.toString(),
+        title: track.title,
+        artist: track.artist.name,
+        preview_url: track.preview,
+      })),
+      artists: [],
+      playlists: [],
+    }
   }
 }

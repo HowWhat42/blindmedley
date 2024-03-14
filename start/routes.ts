@@ -11,12 +11,16 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
 const AuthController = () => import('#controllers/auth_controller')
+const PlaylistController = () => import('#controllers/playlist_controller')
 
 router
   .group(() => {
     router.post('/logout', [AuthController, 'logout'])
     router.get('/', ({ inertia }) => inertia.render('home', { version: '6' }))
     router.get('/me', [AuthController, 'me'])
+
+    router.get('/playlists', [PlaylistController, 'index'])
+    router.get('/playlists/:id', [PlaylistController, 'show'])
   })
   .use(middleware.auth())
 

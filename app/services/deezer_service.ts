@@ -1,6 +1,6 @@
 import { Artist, MusicService, Playlist, SearchResult, Track } from './music_service.js'
 
-export interface DeezerPlaylist {
+interface DeezerPlaylist {
   id: number
   title: string
   description: string
@@ -27,14 +27,14 @@ export interface DeezerPlaylist {
   tracks: { data: DeezerTrack[] }
 }
 
-export interface DeezerCreator {
+interface DeezerCreator {
   id: number
   name: string
   tracklist: string
   link?: string
 }
 
-export interface DeezerTrack {
+interface DeezerTrack {
   id: number
   readable: boolean
   title: string
@@ -62,7 +62,7 @@ export interface DeezerTrack {
   type: string
 }
 
-export interface DeezerAlbum {
+interface DeezerAlbum {
   id: number
   title: string
   link: string
@@ -77,7 +77,7 @@ export interface DeezerAlbum {
   type: string
 }
 
-export interface DeezerArtist {
+interface DeezerArtist {
   id: number
   name: string
   link: string
@@ -93,7 +93,7 @@ export interface DeezerArtist {
   role?: string
 }
 
-export interface SearchTrack {
+interface SearchTrack {
   data: DeezerTrack[]
   total: number
   next: string
@@ -153,8 +153,6 @@ export default class DeezerService extends MusicService {
         artist: track.artist.name,
         preview_url: track.preview,
       })),
-      artists: [],
-      playlists: [],
     }
   }
 }

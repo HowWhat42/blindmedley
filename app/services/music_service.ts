@@ -14,12 +14,11 @@ export interface Playlist {
   id: string
   title: string
   tracks: Track[]
+  noPreviewTracks?: Omit<Track, 'preview_url'>[]
 }
 
 export interface SearchResult {
   tracks: Track[]
-  artists: Artist[]
-  playlists: Playlist[]
 }
 
 export abstract class MusicService {

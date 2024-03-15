@@ -43,9 +43,32 @@ export default class PlaylistController {
     })
   }
 
-  async importSpotify({ request }: HttpContext) {
+  async importSpotify({ request, response }: HttpContext) {
     const { playlistId } = request.all()
 
-    await this.spotifyService.getPlaylist(playlistId)
+    const spotifyPlaylist = await this.spotifyService.getPlaylist(playlistId)
+
+    const playlist = await Playlist.create({
+      title: spotifyPlaylist.title,
+    })
+
+    await playlist.related('tracks').createMany(spotifyPlaylist.tracks)
+
+    if (spotifyPlaylist.noPreviewTracks && spotifyPlaylist.noPreviewTracks.length > 0) {
+      for (const track of spotifyPlaylist.noPreviewTracks) {
+        const result = await this.deezerService.search(track.title)
+        if (result) {
+          await playlist.related('tracks').create({
+            title: result.tracks[0].title,
+            artist: result.tracks[0].artist,
+            preview_url: result.tracks[0].preview_url,
+          })
+        }
+      }
+    }
+
+    return response.redirect().toRoute('playlists.show', {
+      id: playlist.id,
+    })
   }
 }

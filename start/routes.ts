@@ -20,8 +20,11 @@ router
     router.get('/', ({ inertia }) => inertia.render('home', { version: '6' }))
     router.get('/me', [AuthController, 'me'])
 
-    router.get('/playlists', [PlaylistController, 'index'])
-    router.get('/playlists/:id', [PlaylistController, 'show'])
+    router.get('/playlists', [PlaylistController, 'index']).as('playlists')
+    router.get('/playlists/:id', [PlaylistController, 'show']).as('playlists.show')
+    router.post('/playlists', [PlaylistController, 'store'])
+    router.delete('/playlists/:id', [PlaylistController, 'destroy'])
+
     router.get('/profile', ({ inertia }) => inertia.render('profile'))
   })
   .use(middleware.auth())

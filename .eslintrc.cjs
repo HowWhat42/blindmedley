@@ -9,6 +9,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'prettier',
+    'plugin:tailwindcss/recommended',
   ],
   rules: {
     'indent': ['warn', 2],

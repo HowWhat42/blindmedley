@@ -18,7 +18,7 @@ export default defineConfig({
    * Options for the server-side rendering
    */
   ssr: {
-    enabled: true,
+    enabled: false,
     entrypoint: 'resources/ssr.tsx',
   },
 })

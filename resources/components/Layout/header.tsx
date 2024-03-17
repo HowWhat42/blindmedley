@@ -14,15 +14,15 @@ const Header = ({ user }: { user: any }) => {
   }
 
   return (
-    <div className="fixed top-0 w-full flex justify-between items-center py-3 px-8 bg-violet-400">
-      <Link href={'/'} className="text-2xl text-neutral-900 font-bold font-geist">
-        Blindmedley
+    <div className="fixed top-0 z-50 flex w-full items-center justify-between bg-violet-400 px-8 py-3">
+      <Link href={'/'}>
+        <h1 className="font-geist text-2xl font-bold text-neutral-900">Blindmedley</h1>
       </Link>
       <div className="flex items-center gap-3">
         <Link href={'/profile'}>{user.userName}</Link>
         <Popover>
           <PopoverTrigger>
-            <p className="w-10 h-10 p-2 bg-neutral-500 rounded-full cursor-pointer">
+            <p className="size-10 cursor-pointer rounded-full bg-neutral-500 p-2">
               {user.userName[0].toUpperCase()}
             </p>
           </PopoverTrigger>

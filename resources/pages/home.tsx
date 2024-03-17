@@ -1,16 +1,22 @@
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 
-import PlaylistCard from '../components/playlist_card'
+import CreatePlaylistDialog from '../components/dialogs/create_playlist'
+import { Button } from '../components/ui/button'
 
 export default function Home() {
-  const { user } = usePage<any>().props
+  // const { user } = usePage<any>().props
 
   return (
     <>
       <Head title="Homepage" />
 
       <div>
-        <PlaylistCard />
+        <div className="flex justify-between">
+          <h2>Trending Playlists</h2>
+          <CreatePlaylistDialog>
+            <Button>Create Playlist</Button>
+          </CreatePlaylistDialog>
+        </div>
       </div>
     </>
   )

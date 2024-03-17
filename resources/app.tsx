@@ -5,11 +5,12 @@ import { createRoot } from 'react-dom/client'
 
 import { Layout } from './components/Layout/layout'
 import { ThemeProvider } from './components/theme_provider'
+import { Toaster } from './components/ui/sonner'
 
 const appName = import.meta.env.VITE_APP_NAME || 'BlindMedley'
 
 createInertiaApp({
-  progress: { color: '#5468FF' },
+  progress: { color: '#5468FF', delay: 250, includeCSS: true, showSpinner: false },
 
   title: (title: string) => `${title} - ${appName}`,
 
@@ -26,6 +27,7 @@ createInertiaApp({
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Layout user={user}>
           <App {...props} />
+          <Toaster />
         </Layout>
       </ThemeProvider>
     )

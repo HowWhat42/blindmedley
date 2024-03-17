@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { router } from '@inertiajs/react'
-import { LoaderIcon } from 'lucide-react'
+import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from './ui/button'
@@ -56,14 +57,17 @@ const RegisterForm = () => {
       onSuccess: () => {
         setIsLoading(false)
       },
-      onError: () => {
+      onError: (error) => {
         setIsLoading(false)
+        toast.error('Failed to register', {
+          description: error.message,
+        })
       },
     })
   }
 
   return (
-    <Card className="bg-violet-100 border border-violet-300">
+    <Card className="border border-violet-300 bg-violet-100">
       <CardHeader>
         <CardTitle className="font-geist text-neutral-800">Register</CardTitle>
       </CardHeader>
@@ -75,7 +79,7 @@ const RegisterForm = () => {
               name="userName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-neutral-800 text-base">Username</FormLabel>
+                  <FormLabel className="text-base text-neutral-800">Username</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -89,7 +93,7 @@ const RegisterForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-neutral-800 text-base">Email</FormLabel>
+                  <FormLabel className="text-base text-neutral-800">Email</FormLabel>
                   <FormControl>
                     <Input {...field} type="email" />
                   </FormControl>
@@ -104,7 +108,7 @@ const RegisterForm = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel className="text-neutral-800 text-base">Password</FormLabel>
+                    <FormLabel className="text-base text-neutral-800">Password</FormLabel>
                     <FormControl>
                       <Input {...field} type="password" />
                     </FormControl>
@@ -117,7 +121,7 @@ const RegisterForm = () => {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel className="text-neutral-800 text-base">Confirm password</FormLabel>
+                    <FormLabel className="text-base text-neutral-800">Confirm password</FormLabel>
                     <FormControl>
                       <Input {...field} type="password" />
                     </FormControl>
@@ -128,7 +132,7 @@ const RegisterForm = () => {
             </div>
 
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? <LoaderIcon size={24} className="animate-spin" /> : 'Submit'}
+              {isLoading ? <Loader2Icon size={24} className="animate-spin" /> : 'Submit'}
             </Button>
           </form>
         </Form>

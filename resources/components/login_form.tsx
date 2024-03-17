@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { router } from '@inertiajs/react'
-import { LoaderIcon } from 'lucide-react'
+import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from './ui/button'
@@ -37,14 +38,17 @@ const LoginForm = () => {
       onSuccess: () => {
         setIsLoading(false)
       },
-      onError: () => {
+      onError: (error) => {
         setIsLoading(false)
+        toast.error('Failed to login', {
+          description: error.message,
+        })
       },
     })
   }
 
   return (
-    <Card className="bg-violet-100 border border-violet-300">
+    <Card className="border border-violet-300 bg-violet-100">
       <CardHeader>
         <CardTitle className="font-geist text-neutral-800">Login</CardTitle>
       </CardHeader>
@@ -56,7 +60,7 @@ const LoginForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-neutral-800 text-base">Email</FormLabel>
+                  <FormLabel className="text-base text-neutral-800">Email</FormLabel>
                   <FormControl>
                     <Input {...field} type="email" />
                   </FormControl>
@@ -70,7 +74,7 @@ const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-neutral-800 text-base">Password</FormLabel>
+                  <FormLabel className="text-base text-neutral-800">Password</FormLabel>
                   <FormControl>
                     <Input {...field} type="password" />
                   </FormControl>
@@ -80,7 +84,7 @@ const LoginForm = () => {
             />
 
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? <LoaderIcon size={24} className="animate-spin" /> : 'Login'}
+              {isLoading ? <Loader2Icon size={24} className="animate-spin" /> : 'Login'}
             </Button>
           </form>
         </Form>

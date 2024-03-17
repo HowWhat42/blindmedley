@@ -2,8 +2,8 @@ import AuthDialog from '../components/auth_dialog'
 
 const AuthPage = () => {
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center gap-8 -mt-40">
-      <h1 className="text-6xl font-geist">Blindmedley</h1>
+    <div className="-mt-40 flex h-screen w-full flex-col items-center justify-center gap-8">
+      <h1 className="font-geist text-6xl">Blindmedley</h1>
       <AuthDialog />
     </div>
   )

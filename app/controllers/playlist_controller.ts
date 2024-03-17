@@ -13,7 +13,14 @@ export default class PlaylistController {
   ) {}
 
   async index({ inertia }: HttpContext) {
-    const playlists = await Playlist.all()
+    const rawPlaylists = await Playlist.query().withCount('tracks')
+
+    const playlists = rawPlaylists.map((playlist) => {
+      return {
+        ...playlist.$attributes,
+        tracks_count: playlist.$extras.tracks_count,
+      }
+    })
 
     return inertia.render('playlists', {
       playlists,
@@ -21,15 +28,23 @@ export default class PlaylistController {
   }
 
   async show({ params, inertia }: HttpContext) {
-    const playlist = await Playlist.find(params.id)
+    try {
+      const rawPlaylist = await Playlist.query()
+        .where('id', params.id)
+        .preload('tracks')
+        .firstOrFail()
 
-    return inertia.render('playlist', {
-      playlist,
-    })
-  }
+      const playlist = {
+        ...rawPlaylist.$attributes,
+        tracks: rawPlaylist.tracks,
+      }
 
-  async create({ inertia }: HttpContext) {
-    return inertia.render('createPlaylist')
+      return inertia.render('playlist', {
+        playlist,
+      })
+    } catch (error) {
+      return inertia.render('not_found')
+    }
   }
 
   async store({ request, response }: HttpContext) {
@@ -44,6 +59,14 @@ export default class PlaylistController {
     })
   }
 
+  async destroy({ params, response }: HttpContext) {
+    const playlist = await Playlist.findOrFail(params.id)
+
+    await playlist.delete()
+
+    return response.redirect().toRoute('playlists')
+  }
+
   async importDeezer({ request, response }: HttpContext) {
     const { playlistId, deezerId } = request.all()
 
@@ -53,9 +76,7 @@ export default class PlaylistController {
 
     await playlist.related('tracks').createMany(deezerPlaylist.tracks)
 
-    return response.redirect().toRoute('playlists.show', {
-      id: playlist.id,
-    })
+    return response.json(playlist)
   }
 
   async importSpotify({ request, response }: HttpContext) {
@@ -80,9 +101,7 @@ export default class PlaylistController {
       }
     }
 
-    return response.redirect().toRoute('playlists.show', {
-      id: playlist.id,
-    })
+    return response.json(playlist)
   }
 
   async addTrack({ request, response }: HttpContext) {

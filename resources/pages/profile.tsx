@@ -5,10 +5,9 @@ export default function Home() {
 
   return (
     <>
-      <Head title={user.userName}/>
+      <Head title={user.userName} />
 
-      <div>
-      </div>
+      <div></div>
     </>
   )
 }

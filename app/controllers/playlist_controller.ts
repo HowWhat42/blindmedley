@@ -13,7 +13,14 @@ export default class PlaylistController {
   ) {}
 
   async index({ inertia }: HttpContext) {
-    const playlists = await Playlist.all()
+    const rawPlaylists = await Playlist.query().withCount('tracks')
+
+    const playlists = rawPlaylists.map((playlist) => {
+      return {
+        ...playlist.$attributes,
+        tracks_count: playlist.$extras.tracks_count,
+      }
+    })
 
     return inertia.render('playlists', {
       playlists,
@@ -38,6 +45,14 @@ export default class PlaylistController {
     return response.redirect().toRoute('playlists.show', {
       id: playlist.id,
     })
+  }
+
+  async destroy({ params, response }: HttpContext) {
+    const playlist = await Playlist.findOrFail(params.id)
+
+    await playlist.delete()
+
+    return response.redirect().back()
   }
 
   async importDeezer({ request, response }: HttpContext) {

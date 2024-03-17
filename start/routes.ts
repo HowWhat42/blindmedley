@@ -22,6 +22,7 @@ router
 
     router.get('/playlists', [PlaylistController, 'index'])
     router.get('/playlists/:id', [PlaylistController, 'show'])
+    router.get('/profile', ({ inertia }) => inertia.render('profile'))
   })
   .use(middleware.auth())
 
@@ -33,3 +34,4 @@ router
 
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
+

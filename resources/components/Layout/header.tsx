@@ -1,4 +1,4 @@
-import { router } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 
 import { ModeToggle } from '../mode_toggle'
 import { Button } from '../ui/button'
@@ -17,6 +17,7 @@ const Header = ({ user }: { user: any }) => {
     <div className="fixed top-0 w-full flex justify-between items-center py-3 px-8 bg-violet-400">
       <h1 className="text-2xl text-neutral-900 font-bold font-geist">Blindmedley</h1>
       <div className="flex items-center gap-3">
+        <Link href={'/profile'}>{user.userName}</Link>
         <Popover>
           <PopoverTrigger>
             <p className="w-10 h-10 p-2 bg-neutral-500 rounded-full cursor-pointer">

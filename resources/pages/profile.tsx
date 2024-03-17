@@ -1,5 +1,7 @@
 import { Head, usePage } from '@inertiajs/react'
 
+import ProfileCard from '../components/profile_card'
+
 export default function Home() {
   const { user } = usePage<any>().props
 
@@ -7,7 +9,9 @@ export default function Home() {
     <>
       <Head title={user.userName} />
 
-      <div></div>
+      <div>
+        <ProfileCard />
+      </div>
     </>
   )
 }

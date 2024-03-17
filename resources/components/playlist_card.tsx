@@ -1,5 +1,3 @@
-import React from 'react'
-
 const PlaylistCard = () => {
   return (
     <div className="w-[400px] overflow-hidden h-64 relative rounded-2xl group hover:cursor-pointer">

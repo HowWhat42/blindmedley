@@ -15,7 +15,9 @@ const Header = ({ user }: { user: any }) => {
 
   return (
     <div className="fixed top-0 w-full flex justify-between items-center py-3 px-8 bg-violet-400">
-      <h1 className="text-2xl text-neutral-900 font-bold font-geist">Blindmedley</h1>
+      <Link href={'/'} className="text-2xl text-neutral-900 font-bold font-geist">
+        Blindmedley
+      </Link>
       <div className="flex items-center gap-3">
         <Link href={'/profile'}>{user.userName}</Link>
         <Popover>

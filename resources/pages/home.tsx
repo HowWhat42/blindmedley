@@ -1,11 +1,11 @@
 import { Head } from '@inertiajs/react'
 
+import { Layout } from '#components/Layout/layout'
+
 import CreatePlaylistDialog from '../components/dialogs/create_playlist'
 import { Button } from '../components/ui/button'
 
 export default function Home() {
-  // const { user } = usePage<any>().props
-
   return (
     <>
       <Head title="Homepage" />
@@ -20,4 +20,9 @@ export default function Home() {
       </div>
     </>
   )
+}
+
+Home.layout = (page: any) => {
+  const { user } = page.props
+  return <Layout user={user}>{page}</Layout>
 }

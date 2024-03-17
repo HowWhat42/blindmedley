@@ -1,5 +1,7 @@
 import { Head } from '@inertiajs/react'
 
+import { Layout } from '#components/Layout/layout'
+
 import CreatePlaylistDialog from '../components/dialogs/create_playlist'
 import PlaylistCard from '../components/playlist_card'
 import { Button } from '../components/ui/button'
@@ -23,6 +25,11 @@ const Playlist = ({ playlists }: { playlists: any }) => {
       </div>
     </>
   )
+}
+
+Playlist.layout = (page: any) => {
+  const { user } = page.props
+  return <Layout user={user}>{page}</Layout>
 }
 
 export default Playlist

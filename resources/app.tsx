@@ -3,7 +3,6 @@ import './css/app.css'
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 
-import { Layout } from './components/Layout/layout'
 import { ThemeProvider } from './components/theme_provider'
 import { Toaster } from './components/ui/sonner'
 
@@ -16,19 +15,20 @@ createInertiaApp({
 
   resolve: (name) => {
     const pages = import.meta.glob('./pages/**/*.tsx', { eager: true })
-    return pages[`./pages/${name}.tsx`]
+    let page = pages[`./pages/${name}.tsx`]
+    if (!page) {
+      page = pages[`./pages/not_found.tsx`]
+    }
+    return page
   },
 
   setup({ el, App, props }) {
     const root = createRoot(el)
 
-    const user = props.initialPage.props.user
     root.render(
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <Layout user={user}>
-          <App {...props} />
-          <Toaster />
-        </Layout>
+        <App {...props} />
+        <Toaster />
       </ThemeProvider>
     )
   },

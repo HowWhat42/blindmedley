@@ -1,6 +1,7 @@
 import { Head, router } from '@inertiajs/react'
 
 import DeleteCard from '#components/delete_card'
+import { Layout } from '#components/Layout/layout'
 import { Button } from '#components/ui/button'
 
 const Playlist = ({ playlist }: { playlist: any }) => {
@@ -18,6 +19,11 @@ const Playlist = ({ playlist }: { playlist: any }) => {
       </div>
     </>
   )
+}
+
+Playlist.layout = (page: any) => {
+  const { user } = page.props
+  return <Layout user={user}>{page}</Layout>
 }
 
 export default Playlist

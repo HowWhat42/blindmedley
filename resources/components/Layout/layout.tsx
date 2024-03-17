@@ -5,9 +5,7 @@ interface Props {
   user?: any
 }
 
-export function Layout(props: Props) {
-  const { children, user } = props
-
+export function Layout({ children, user }: Props) {
   return (
     <>
       <Header user={user} />

@@ -23,7 +23,8 @@
       "#types/*": ["./types/*.js"],
       "#resources/*": ["./resources/*.js"],
       "#start/*": ["./start/*.js"],
-      "#config/*": ["./config/*.js"]
+      "#config/*": ["./config/*.js"],
+      "#components/*": ["./resources/components/*.js"]
     }
   }
 }

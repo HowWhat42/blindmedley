@@ -21,7 +21,9 @@ router
     router.get('/me', [AuthController, 'me'])
 
     router.get('/playlists', [PlaylistController, 'index'])
-    router.get('/playlists/:id', [PlaylistController, 'show'])
+    router.get('/playlists/:id', [PlaylistController, 'show']).as('playlists.show')
+    router.post('/playlists', [PlaylistController, 'store'])
+
     router.get('/profile', ({ inertia }) => inertia.render('profile'))
   })
   .use(middleware.auth())

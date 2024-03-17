@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { router } from '@inertiajs/react'
-import { LoaderIcon } from 'lucide-react'
+import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from './ui/button'
@@ -37,8 +38,11 @@ const LoginForm = () => {
       onSuccess: () => {
         setIsLoading(false)
       },
-      onError: () => {
+      onError: (error) => {
         setIsLoading(false)
+        toast.error('Failed to login', {
+          description: error.message,
+        })
       },
     })
   }
@@ -80,7 +84,7 @@ const LoginForm = () => {
             />
 
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? <LoaderIcon size={24} className="animate-spin" /> : 'Login'}
+              {isLoading ? <Loader2Icon size={24} className="animate-spin" /> : 'Login'}
             </Button>
           </form>
         </Form>

@@ -1,6 +1,7 @@
-import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, manyToMany } from '@adonisjs/lucid/orm'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
+import { randomUUID, UUID } from 'node:crypto'
 
 import Track from './track.js'
 import User from './user.js'
@@ -26,4 +27,9 @@ export default class Playlist extends BaseModel {
 
   @manyToMany(() => User)
   declare users: ManyToMany<typeof User>
+
+  @beforeCreate()
+  static async createUUID(playlist: Playlist) {
+    playlist.id = randomUUID() as UUID
+  }
 }

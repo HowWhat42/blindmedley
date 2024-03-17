@@ -21,15 +21,11 @@ export default class PlaylistController {
   }
 
   async show({ params, inertia }: HttpContext) {
-    const playlist = await Playlist.find(params.id)
+    const playlist = await Playlist.findOrFail(params.id)
 
     return inertia.render('playlist', {
       playlist,
     })
-  }
-
-  async create({ inertia }: HttpContext) {
-    return inertia.render('createPlaylist')
   }
 
   async store({ request, response }: HttpContext) {
@@ -53,9 +49,7 @@ export default class PlaylistController {
 
     await playlist.related('tracks').createMany(deezerPlaylist.tracks)
 
-    return response.redirect().toRoute('playlists.show', {
-      id: playlist.id,
-    })
+    return response.json(playlist)
   }
 
   async importSpotify({ request, response }: HttpContext) {
@@ -80,9 +74,7 @@ export default class PlaylistController {
       }
     }
 
-    return response.redirect().toRoute('playlists.show', {
-      id: playlist.id,
-    })
+    return response.json(playlist)
   }
 
   async addTrack({ request, response }: HttpContext) {

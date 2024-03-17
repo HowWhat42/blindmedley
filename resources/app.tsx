@@ -1,7 +1,8 @@
 import './css/app.css'
 
-import { createRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react'
+import { createRoot } from 'react-dom/client'
+
 import { Layout } from './components/Layout/layout'
 import { ThemeProvider } from './components/theme_provider'
 

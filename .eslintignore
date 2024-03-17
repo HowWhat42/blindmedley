@@ -1,0 +1,17 @@
+.prettierrc.js
+.eslintrc.js
+babel.config.js
+tsconfig.json
+
+# DO ignore JSON-with-comments files
+tsconfig.json
+
+# Usual stuff to ignore
+node_modules/*
+dist/*
+coverage/*
+generated/
+**/*/public/*
+
+**/*.js
+**/*.jsx

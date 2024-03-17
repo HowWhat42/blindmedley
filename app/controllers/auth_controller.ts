@@ -1,7 +1,8 @@
-import User from '#models/user'
-import AuthService from '#services/auth_service'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
+
+import User from '#models/user'
+import AuthService from '#services/auth_service'
 
 @inject()
 export default class AuthController {

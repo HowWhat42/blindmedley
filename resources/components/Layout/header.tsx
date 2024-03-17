@@ -1,7 +1,8 @@
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { Button } from '../ui/button'
 import { router } from '@inertiajs/react'
+
 import { ModeToggle } from '../mode_toggle'
+import { Button } from '../ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 const Header = ({ user }: { user: any }) => {
   const handleLogout = () => {

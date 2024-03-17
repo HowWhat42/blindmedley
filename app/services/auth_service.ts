@@ -1,5 +1,6 @@
-import User from '#models/user'
 import db from '@adonisjs/lucid/services/db'
+
+import User from '#models/user'
 import type { Role } from '#types/user'
 
 type UserCreate = {

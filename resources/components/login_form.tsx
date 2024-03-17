@@ -1,13 +1,14 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { router } from '@inertiajs/react'
+import { LoaderIcon } from 'lucide-react'
 import { useState } from 'react'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Input } from './ui/input'
+
 import { Button } from './ui/button'
-import { LoaderIcon } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
-import { router } from '@inertiajs/react'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
+import { Input } from './ui/input'
 
 const LoginFormSchema = z.object({
   email: z.string().email(),

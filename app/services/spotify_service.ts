@@ -1,6 +1,8 @@
+import { DateTime } from 'luxon'
+
 import Token from '#models/token'
 import env from '#start/env'
-import { DateTime } from 'luxon'
+
 import { Artist, MusicService, Playlist, SearchResult, Track } from './music_service.js'
 
 interface SpotifyTrack {

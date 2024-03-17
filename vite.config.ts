@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite'
-import adonisjs from '@adonisjs/vite/client'
 import inertia from '@adonisjs/inertia/client'
+import adonisjs from '@adonisjs/vite/client'
 import react from '@vitejs/plugin-react'
-import tailwindcss from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
+import tailwindcss from 'tailwindcss'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [

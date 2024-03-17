@@ -1,8 +1,9 @@
-import { DateTime } from 'luxon'
 import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
-import User from './user.js'
+import { DateTime } from 'luxon'
+
 import Track from './track.js'
+import User from './user.js'
 
 export default class Playlist extends BaseModel {
   @column({ isPrimary: true })

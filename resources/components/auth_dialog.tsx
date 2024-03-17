@@ -1,6 +1,6 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import LoginForm from './login_form'
 import RegisterForm from './register_form'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 
 enum AuthDialogTab {
   login = 'login',

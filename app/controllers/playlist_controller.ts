@@ -1,8 +1,9 @@
+import { inject } from '@adonisjs/core'
+import { HttpContext } from '@adonisjs/core/http'
+
 import Playlist from '#models/playlist'
 import DeezerService from '#services/deezer_service'
 import SpotifyService from '#services/spotify_service'
-import { inject } from '@adonisjs/core'
-import { HttpContext } from '@adonisjs/core/http'
 
 @inject()
 export default class PlaylistController {
@@ -27,14 +28,28 @@ export default class PlaylistController {
     })
   }
 
-  async importDeezer({ request, response }: HttpContext) {
-    const { playlistId } = request.all()
+  async create({ inertia }: HttpContext) {
+    return inertia.render('createPlaylist')
+  }
 
-    const deezerPlaylist = await this.deezerService.getPlaylist(playlistId)
+  async store({ request, response }: HttpContext) {
+    const { title } = request.all()
 
     const playlist = await Playlist.create({
-      title: deezerPlaylist.title,
+      title,
     })
+
+    return response.redirect().toRoute('playlists.show', {
+      id: playlist.id,
+    })
+  }
+
+  async importDeezer({ request, response }: HttpContext) {
+    const { playlistId, deezerId } = request.all()
+
+    const deezerPlaylist = await this.deezerService.getPlaylist(deezerId)
+
+    const playlist = await Playlist.findOrFail(playlistId)
 
     await playlist.related('tracks').createMany(deezerPlaylist.tracks)
 
@@ -44,13 +59,11 @@ export default class PlaylistController {
   }
 
   async importSpotify({ request, response }: HttpContext) {
-    const { playlistId } = request.all()
+    const { playlistId, spotifyId } = request.all()
 
-    const spotifyPlaylist = await this.spotifyService.getPlaylist(playlistId)
+    const spotifyPlaylist = await this.spotifyService.getPlaylist(spotifyId)
 
-    const playlist = await Playlist.create({
-      title: spotifyPlaylist.title,
-    })
+    const playlist = await Playlist.findOrFail(playlistId)
 
     await playlist.related('tracks').createMany(spotifyPlaylist.tracks)
 
@@ -70,5 +83,17 @@ export default class PlaylistController {
     return response.redirect().toRoute('playlists.show', {
       id: playlist.id,
     })
+  }
+
+  async addTrack({ request, response }: HttpContext) {
+    const { playlistId, trackId } = request.all()
+
+    const playlist = await Playlist.findOrFail(playlistId)
+
+    const track = await this.deezerService.getTrack(trackId)
+
+    await playlist.related('tracks').create(track)
+
+    return response.json(playlist)
   }
 }

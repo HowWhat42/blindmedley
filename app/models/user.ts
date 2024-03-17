@@ -1,12 +1,14 @@
-import { DateTime } from 'luxon'
 import { withAuthFinder } from '@adonisjs/auth'
-import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
+import hash from '@adonisjs/core/services/hash'
 import { BaseModel, beforeCreate, column, manyToMany } from '@adonisjs/lucid/orm'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
-import Playlist from './playlist.js'
-import type { Role } from '#types/user'
+import { DateTime } from 'luxon'
 import { randomUUID, type UUID } from 'node:crypto'
+
+import type { Role } from '#types/user'
+
+import Playlist from './playlist.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],

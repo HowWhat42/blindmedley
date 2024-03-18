@@ -59,6 +59,20 @@ export default class PlaylistController {
     })
   }
 
+  async update({ params, request, response }: HttpContext) {
+    const playlist = await Playlist.findOrFail(params.id)
+
+    const { title } = request.all()
+
+    playlist.title = title
+
+    await playlist.save()
+
+    return response.redirect().toRoute('playlists.show', {
+      id: playlist.id,
+    })
+  }
+
   async destroy({ params, response }: HttpContext) {
     const playlist = await Playlist.findOrFail(params.id)
 

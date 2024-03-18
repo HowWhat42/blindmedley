@@ -23,6 +23,7 @@ router
     router.get('/playlists', [PlaylistController, 'index']).as('playlists')
     router.get('/playlists/:id', [PlaylistController, 'show']).as('playlists.show')
     router.post('/playlists', [PlaylistController, 'store'])
+    router.post('/playlists/:id/import', [PlaylistController, 'import'])
     router.put('/playlists/:id', [PlaylistController, 'update'])
     router.delete('/playlists/:id', [PlaylistController, 'destroy'])
 

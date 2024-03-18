@@ -37,12 +37,31 @@ const ImportPlaylistDialog = ({
   const form = useForm<PlaylistFormValues>({
     resolver: zodResolver(PlaylistFormSchema),
     defaultValues: {
-      url: playlist.title ?? '',
+      url: '',
     },
   })
 
   const onSubmit = async (values: PlaylistFormValues) => {
-    router.put(`/playlists/${playlist.id}`, values, {
+    if (!values.url) {
+      return
+    }
+
+    if (!values.url.includes('spotify') && !values.url.includes('deezer')) {
+      toast.error('Invalid URL')
+      return
+    }
+
+    const provider = values.url.includes('spotify') ? 'spotify' : 'deezer'
+
+    if (values.url.includes('spotify')) {
+      values.url = values.url.replace('https://open.spotify.com/playlist/', '')
+    }
+
+    if (values.url.includes('deezer')) {
+      values.url = values.url.replace('https://www.deezer.com/fr/playlist/', '')
+    }
+
+    router.post(`/playlists/${playlist.id}/import?provider=${provider}`, values, {
       onStart: () => {
         setIsLoading(true)
       },

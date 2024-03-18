@@ -47,7 +47,7 @@ interface DeezerTrack {
   track_position: number
   disk_number: number
   rank: number
-  release_date: string
+  time_add: number
   explicit_lyrics: boolean
   explicit_content_lyrics: number
   explicit_content_cover: number
@@ -105,6 +105,8 @@ export default class DeezerService extends MusicService {
       (res) => res.json() as Promise<DeezerPlaylist>
     )
 
+    console.log(playlist.tracks.data)
+
     return {
       id: playlist.id.toString(),
       title: playlist.title,
@@ -112,7 +114,7 @@ export default class DeezerService extends MusicService {
         id: track.id.toString(),
         title: track.title,
         artist: track.artist.name,
-        release_date: track.release_date,
+        release_date: new Date(track.album.release_date).getFullYear().toString(),
         preview_url: track.preview,
         provider: 'deezer',
         track_url: track.link,
@@ -129,7 +131,7 @@ export default class DeezerService extends MusicService {
       id: track.id.toString(),
       title: track.title,
       artist: track.artist.name,
-      release_date: track.release_date,
+      release_date: new Date(track.album.release_date).getFullYear().toString(),
       preview_url: track.preview,
       provider: 'deezer',
       track_url: track.link,
@@ -157,7 +159,7 @@ export default class DeezerService extends MusicService {
         id: track.id.toString(),
         title: track.title,
         artist: track.artist.name,
-        release_date: track.release_date,
+        release_date: new Date(track.album.release_date).getFullYear().toString(),
         preview_url: track.preview,
         provider: 'deezer',
         track_url: track.link,

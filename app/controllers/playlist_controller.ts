@@ -81,12 +81,25 @@ export default class PlaylistController {
     return response.redirect().toRoute('playlists')
   }
 
+  async import(ctx: HttpContext) {
+    const { provider } = ctx.request.qs()
+
+    if (provider === 'deezer') {
+      return this.importDeezer(ctx)
+    }
+
+    if (provider === 'spotify') {
+      return this.importSpotify(ctx)
+    }
+  }
+
   async importDeezer({ request, response }: HttpContext) {
-    const { playlistId, deezerId } = request.all()
+    const { id } = request.params()
+    const { url } = request.body()
 
-    const deezerPlaylist = await this.deezerService.getPlaylist(deezerId)
+    const deezerPlaylist = await this.deezerService.getPlaylist(url)
 
-    const playlist = await Playlist.findOrFail(playlistId)
+    const playlist = await Playlist.findOrFail(id)
 
     await playlist.related('tracks').createMany(deezerPlaylist.tracks)
 
@@ -94,11 +107,12 @@ export default class PlaylistController {
   }
 
   async importSpotify({ request, response }: HttpContext) {
-    const { playlistId, spotifyId } = request.all()
+    const { id } = request.params()
+    const { url } = request.body()
 
-    const spotifyPlaylist = await this.spotifyService.getPlaylist(spotifyId)
+    const spotifyPlaylist = await this.spotifyService.getPlaylist(url)
 
-    const playlist = await Playlist.findOrFail(playlistId)
+    const playlist = await Playlist.findOrFail(id)
 
     await playlist.related('tracks').createMany(spotifyPlaylist.tracks)
 

@@ -73,10 +73,14 @@ const Playlist = ({ playlist }: { playlist: any }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <Track source="deezer" />
-              <Track source="spotify" />
+              {playlist.tracks.map((track: any) => (
+                <Track key={track.id} track={track} />
+              ))}
             </TableBody>
           </Table>
+          {playlist.tracks.length === 0 && (
+            <div className="mt-4 text-center text-neutral-500">No tracks in this playlist</div>
+          )}
         </div>
       </div>
     </>

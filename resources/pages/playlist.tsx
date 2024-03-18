@@ -73,7 +73,8 @@ const Playlist = ({ playlist }: { playlist: any }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <Track />
+              <Track source="deezer" />
+              <Track source="spotify" />
             </TableBody>
           </Table>
         </div>

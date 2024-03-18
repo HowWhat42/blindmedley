@@ -1,15 +1,19 @@
-import { EditIcon, MusicIcon, TrashIcon } from 'lucide-react'
+import { EditIcon, TrashIcon } from 'lucide-react'
 import React from 'react'
 
 import { Button } from './ui/button'
 import { TableCell, TableRow } from './ui/table'
 
-const Track = () => {
+const Track = ({ source }: { source: string }) => {
   return (
     <TableRow>
       <TableCell>
-        <Button size="icon" variant="secondary">
-          <MusicIcon size={20} />
+        <Button size="icon" variant="ghost">
+          <img
+            src={source === 'deezer' ? '/assets/deezer_logo.png' : '/assets/spotify_logo.png'}
+            alt="Source"
+            className="size-5"
+          />
         </Button>
       </TableCell>
       <TableCell className="flex flex-col justify-center">

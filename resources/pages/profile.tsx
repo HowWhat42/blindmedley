@@ -12,7 +12,7 @@ export default function Profile() {
       <Head title={user.userName} />
 
       <div>
-        <ProfileCard />
+        <ProfileCard user={user} />
       </div>
     </>
   )

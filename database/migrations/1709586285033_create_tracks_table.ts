@@ -9,7 +9,10 @@ export default class extends BaseSchema {
 
       table.string('title').notNullable()
       table.string('artist').notNullable()
+      table.string('release_date').notNullable()
       table.string('preview_url').notNullable()
+      table.string('provider').notNullable()
+      table.string('track_url').notNullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

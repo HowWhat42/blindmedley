@@ -2,7 +2,10 @@ export interface Track {
   id: string
   title: string
   artist: string
+  release_date: string
   preview_url: string
+  provider: string
+  track_url: string
 }
 
 export interface Artist {

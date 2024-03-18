@@ -204,12 +204,18 @@ export default class SpotifyService extends MusicService {
         id: item.track.id,
         title: item.track.name,
         artist: item.track.artists[0].name,
+        release_date: item.track.album.release_date,
         preview_url: item.track.preview_url!,
+        provider: 'spotify',
+        track_url: item.track.external_urls.spotify,
       })),
       noPreviewTracks: noPreviewTracks.map((item) => ({
         id: item.track.id,
         title: item.track.name,
         artist: item.track.artists[0].name,
+        release_date: item.track.album.release_date,
+        provider: 'spotify',
+        track_url: item.track.external_urls.spotify,
       })),
     }
   }
@@ -236,7 +242,10 @@ export default class SpotifyService extends MusicService {
       id: data.id,
       title: data.name,
       artist: data.artists[0].name,
+      release_date: data.album.release_date,
       preview_url: data.preview_url,
+      provider: 'spotify',
+      track_url: data.external_urls.spotify,
     }
   }
 
@@ -285,7 +294,10 @@ export default class SpotifyService extends MusicService {
         id: track.id,
         title: track.name,
         artist: track.artists[0].name,
+        release_date: track.album.release_date,
         preview_url: track.preview_url!,
+        provider: 'spotify',
+        track_url: track.external_urls.spotify,
       })),
     }
   }

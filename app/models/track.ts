@@ -16,7 +16,16 @@ export default class Track extends BaseModel {
   declare artist: string
 
   @column()
+  declare release_date: string
+
+  @column()
   declare preview_url: string
+
+  @column()
+  declare provider: string
+
+  @column()
+  declare track_url: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

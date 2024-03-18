@@ -69,7 +69,7 @@ const Playlist = ({ playlist }: { playlist: any }) => {
                 <TableHead>Answer</TableHead>
                 <TableHead>Album</TableHead>
                 <TableHead>Release year</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-right"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

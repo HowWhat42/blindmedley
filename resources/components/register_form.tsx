@@ -56,6 +56,7 @@ const RegisterForm = () => {
       },
       onSuccess: () => {
         setIsLoading(false)
+        toast.success('Registered')
       },
       onError: (error) => {
         setIsLoading(false)

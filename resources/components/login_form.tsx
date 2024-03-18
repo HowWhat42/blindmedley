@@ -37,6 +37,7 @@ const LoginForm = () => {
       },
       onSuccess: () => {
         setIsLoading(false)
+        toast.success('Logged in')
       },
       onError: (error) => {
         setIsLoading(false)

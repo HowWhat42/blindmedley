@@ -7,8 +7,9 @@ import AddTrackDialog from '#components/dialogs/add_track'
 import EditPlaylistDialog from '#components/dialogs/edit_playlist'
 import ImportPlaylistDialog from '#components/dialogs/import_playlist'
 import { Layout } from '#components/Layout/layout'
+import Track from '#components/track'
 import { Button } from '#components/ui/button'
-import { Table, TableBody, TableHead, TableRow } from '#components/ui/table'
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '#components/ui/table'
 
 const Playlist = ({ playlist }: { playlist: any }) => {
   const onDelete = () => {
@@ -60,18 +61,22 @@ const Playlist = ({ playlist }: { playlist: any }) => {
           </div>
         </div>
 
-        <Table className="w-full ">
-          <TableHead>
-            <TableRow>
-              <TableHead></TableHead>
-              <TableHead>Answer</TableHead>
-              <TableHead>Album</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead></TableHead>
-            </TableRow>
-          </TableHead>
-          <TableBody></TableBody>
-        </Table>
+        <div className="rounded-xl border-2 border-violet-500 p-4">
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12">Source</TableHead>
+                <TableHead>Answer</TableHead>
+                <TableHead>Album</TableHead>
+                <TableHead>Release year</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <Track />
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </>
   )

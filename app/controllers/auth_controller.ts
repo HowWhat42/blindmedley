@@ -8,14 +8,19 @@ import AuthService from '#services/auth_service'
 export default class AuthController {
   constructor(private authService: AuthService) {}
 
-  async login({ auth, request, response }: HttpContext) {
-    const { email, password } = request.all()
+  async login({ auth, session, request, response }: HttpContext) {
+    try {
+      const { email, password } = request.all()
 
-    const user = await User.verifyCredentials(email, password)
+      const user = await User.verifyCredentials(email, password)
 
-    await auth.use('web').login(user)
+      await auth.use('web').login(user)
 
-    return response.redirect('/')
+      return response.redirect('/')
+    } catch (error) {
+      session.flash('errors.auth', 'Invalid credentials')
+      return response.redirect().back()
+    }
   }
 
   async register({ auth, request, response }: HttpContext) {

@@ -30,16 +30,18 @@ const Header = ({ user }: { user: any }) => {
                 My account
               </Button>
             </Link>
+            <Button variant="ghost" className="w-full !justify-end text-right">
+              <ModeToggle />
+            </Button>
             <Button
               onClick={handleLogout}
               variant="ghost"
-              className="w-full !justify-end text-right"
+              className="w-full !justify-end text-right hover:bg-red-500 hover:text-white"
             >
               Logout
             </Button>
           </PopoverContent>
         </Popover>
-        <ModeToggle />
       </div>
     </div>
   )

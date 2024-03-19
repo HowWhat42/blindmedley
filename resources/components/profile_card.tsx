@@ -2,17 +2,17 @@ import React from 'react'
 
 import { Avatar, AvatarFallback } from '#components/ui/avatar'
 
-import History from '../components/history'
+import History from './history'
 
 const ProfileCard = ({ user }: { user: any }) => {
   return (
-    <div className="mx-40 mt-32 h-dvh rounded-3xl bg-zinc-300">
+    <div className="mx-40 mt-32 rounded-3xl bg-zinc-300">
       <div className="flex content-center">
         <Avatar className="mx-auto -mt-32 size-64 rounded-full bg-purple-500">
           <AvatarFallback className="text-6xl">{user.userName[0].toUpperCase()}</AvatarFallback>
         </Avatar>
       </div>
-      <div className="-mt-24 ml-16">
+      <div className="-mt-24 ml-12">
         <h3 className="flex content-center text-3xl">{user.userName}</h3>
         <ul className="font-['Urbanist'] text-lg font-normal leading-7 text-neutral-900">
           <li>

@@ -5,7 +5,9 @@ export interface Track {
   release_date: string
   preview_url: string
   provider: string
+  provider_id: string
   track_url: string
+  album?: string
 }
 
 export interface Artist {

@@ -13,6 +13,8 @@ export default class extends BaseSchema {
       table.string('preview_url').notNullable()
       table.string('provider').notNullable()
       table.string('track_url').notNullable()
+      table.string('provider_id').notNullable()
+      table.string('album')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

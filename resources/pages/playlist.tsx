@@ -66,6 +66,7 @@ const Playlist = ({ playlist }: { playlist: any }) => {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">Source</TableHead>
+                <TableHead className="w-12">Preview</TableHead>
                 <TableHead>Answer</TableHead>
                 <TableHead>Album</TableHead>
                 <TableHead>Release year</TableHead>

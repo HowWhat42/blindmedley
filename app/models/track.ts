@@ -27,6 +27,12 @@ export default class Track extends BaseModel {
   @column()
   declare track_url: string
 
+  @column()
+  declare provider_id: string
+
+  @column()
+  declare album?: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

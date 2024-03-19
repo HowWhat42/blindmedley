@@ -181,25 +181,19 @@ export default class SpotifyService extends MusicService {
 
   async getPlaylist(playlistId: string): Promise<Playlist> {
     const accessToken = await this.getAccessToken()
-    const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+    const playlist = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    })
+    }).then((res) => res.json() as Promise<SpotifyPlaylist>)
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch playlist')
-    }
+    const noPreviewTracks = playlist.tracks.items.filter((item) => !item.track.preview_url)
 
-    const data = (await response.json()) as SpotifyPlaylist
-
-    const noPreviewTracks = data.tracks.items.filter((item) => !item.track.preview_url)
-
-    const filteredTracks = data.tracks.items.filter((item) => item.track.preview_url)
+    const filteredTracks = playlist.tracks.items.filter((item) => item.track.preview_url)
 
     return {
-      id: data.id,
-      title: data.name,
+      id: playlist.id,
+      title: playlist.name,
       tracks: filteredTracks.map((item) => ({
         id: item.track.id,
         title: item.track.name,
@@ -207,7 +201,9 @@ export default class SpotifyService extends MusicService {
         release_date: item.track.album.release_date,
         preview_url: item.track.preview_url!,
         provider: 'spotify',
+        provider_id: item.track.id,
         track_url: item.track.external_urls.spotify,
+        album: item.track.album.name,
       })),
       noPreviewTracks: noPreviewTracks.map((item) => ({
         id: item.track.id,
@@ -215,37 +211,34 @@ export default class SpotifyService extends MusicService {
         artist: item.track.artists[0].name,
         release_date: item.track.album.release_date,
         provider: 'spotify',
+        provider_id: item.track.id,
         track_url: item.track.external_urls.spotify,
+        album: item.track.album.name,
       })),
     }
   }
 
   async getTrack(trackId: string): Promise<Track> {
     const accessToken = await this.getAccessToken()
-    const response = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+    const track = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    })
+    }).then((res) => res.json() as Promise<SpotifyTrack>)
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch track')
-    }
-
-    const data = (await response.json()) as SpotifyTrack
-
-    if (!data.preview_url) {
+    if (!track.preview_url) {
       throw new Error('Preview not available')
     }
 
     return {
-      id: data.id,
-      title: data.name,
-      artist: data.artists[0].name,
-      release_date: data.album.release_date,
-      preview_url: data.preview_url,
+      id: track.id,
+      title: track.name,
+      artist: track.artists[0].name,
+      release_date: track.album.release_date,
+      preview_url: track.preview_url,
       provider: 'spotify',
-      track_url: data.external_urls.spotify,
+      provider_id: track.id,
+      track_url: track.external_urls.spotify,
     }
   }
 
@@ -271,23 +264,13 @@ export default class SpotifyService extends MusicService {
 
   async search(query: string): Promise<SearchResult> {
     const accessToken = await this.getAccessToken()
-    const response = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=track`, {
+    const searchResult = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=track`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    })
+    }).then((res) => res.json() as Promise<{ tracks: { items: SpotifyTrack[] } }>)
 
-    if (!response.ok) {
-      throw new Error('Failed to search')
-    }
-
-    const data = (await response.json()) as {
-      tracks: {
-        items: SpotifyTrack[]
-      }
-    }
-
-    const filteredTracks = data.tracks.items.filter((track) => track.preview_url)
+    const filteredTracks = searchResult.tracks.items.filter((track) => track.preview_url)
 
     return {
       tracks: filteredTracks.map((track) => ({
@@ -297,7 +280,9 @@ export default class SpotifyService extends MusicService {
         release_date: track.album.release_date,
         preview_url: track.preview_url!,
         provider: 'spotify',
+        provider_id: track.id,
         track_url: track.external_urls.spotify,
+        album: track.album.name,
       })),
     }
   }

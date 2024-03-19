@@ -114,10 +114,12 @@ export default class DeezerService extends MusicService {
         id: track.id.toString(),
         title: track.title,
         artist: track.artist.name,
-        release_date: new Date(track.album.release_date).getFullYear().toString(),
+        release_date: new Date(track.time_add * 1000).getFullYear().toString(),
         preview_url: track.preview,
         provider: 'deezer',
+        provider_id: track.id.toString(),
         track_url: track.link,
+        album: track.album.title,
       })),
     }
   }
@@ -131,10 +133,12 @@ export default class DeezerService extends MusicService {
       id: track.id.toString(),
       title: track.title,
       artist: track.artist.name,
-      release_date: new Date(track.album.release_date).getFullYear().toString(),
+      release_date: new Date(track.time_add * 1000).getFullYear().toString(),
       preview_url: track.preview,
       provider: 'deezer',
+      provider_id: track.id.toString(),
       track_url: track.link,
+      album: track.album.title,
     }
   }
 
@@ -159,10 +163,12 @@ export default class DeezerService extends MusicService {
         id: track.id.toString(),
         title: track.title,
         artist: track.artist.name,
-        release_date: new Date(track.album.release_date).getFullYear().toString(),
+        release_date: new Date(track.time_add * 1000).getFullYear().toString(),
         preview_url: track.preview,
         provider: 'deezer',
+        provider_id: track.id.toString(),
         track_url: track.link,
+        album: track.album.title,
       })),
     }
   }

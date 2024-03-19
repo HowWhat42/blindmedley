@@ -103,7 +103,9 @@ export default class PlaylistController {
 
     await playlist.related('tracks').createMany(deezerPlaylist.tracks)
 
-    return response.json(playlist)
+    return response.redirect().toRoute('playlists.show', {
+      id: playlist.id,
+    })
   }
 
   async importSpotify({ request, response }: HttpContext) {
@@ -129,7 +131,9 @@ export default class PlaylistController {
       }
     }
 
-    return response.json(playlist)
+    return response.redirect().toRoute('playlists.show', {
+      id: playlist.id,
+    })
   }
 
   async addTrack({ request, response }: HttpContext) {

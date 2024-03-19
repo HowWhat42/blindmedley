@@ -30,7 +30,7 @@ const Track = ({ track }: { track: any }) => {
         <p>Artist: {track.artist}</p>
         <p>Title: {track.title}</p>
       </TableCell>
-      <TableCell>{track.album ?? 'Single'}</TableCell>
+      {/* <TableCell>{track.album ?? 'Single'}</TableCell> */}
       <TableCell>{track.releaseDate}</TableCell>
       <TableCell className="space-x-3 text-right">
         <Button size="icon" variant="secondary">

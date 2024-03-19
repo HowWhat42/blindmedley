@@ -13,7 +13,7 @@ import { Input } from './ui/input'
 
 const LoginFormSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8),
+  password: z.string(),
 })
 
 type LoginFormValues = z.infer<typeof LoginFormSchema>

@@ -25,22 +25,20 @@ const Header = ({ user }: { user: any }) => {
             </Avatar>
           </PopoverTrigger>
           <PopoverContent className="mr-16">
+            <ModeToggle />
             <Link href={'/profile'}>
               <Button variant="ghost" className="w-full !justify-end text-right">
                 My account
               </Button>
             </Link>
 
-            <div className="flex ">
-              <ModeToggle />
-              <Button
-                onClick={handleLogout}
-                variant="ghost"
-                className="w-full !justify-end text-right hover:bg-red-500 hover:text-white"
-              >
-                Logout
-              </Button>
-            </div>
+            <Button
+              onClick={handleLogout}
+              variant="ghost"
+              className="w-full !justify-end text-right hover:bg-red-500 hover:text-white"
+            >
+              Logout
+            </Button>
           </PopoverContent>
         </Popover>
       </div>

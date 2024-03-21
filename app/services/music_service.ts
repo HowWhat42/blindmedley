@@ -1,4 +1,4 @@
-export interface Track {
+export interface ITrack {
   id: string
   title: string
   artist: string
@@ -18,17 +18,17 @@ export interface Artist {
 export interface Playlist {
   id: string
   title: string
-  tracks: Track[]
-  noPreviewTracks?: Omit<Track, 'preview_url'>[]
+  tracks: ITrack[]
+  noPreviewTracks?: Omit<ITrack, 'preview_url'>[]
 }
 
 export interface SearchResult {
-  tracks: Track[]
+  tracks: ITrack[]
 }
 
 export abstract class MusicService {
   abstract getPlaylist(playlistId: string): Promise<Playlist>
-  abstract getTrack(trackId: string): Promise<Track>
+  abstract getTrack(trackId: string): Promise<ITrack>
   abstract getArtist(artistId: string): Promise<Artist>
   abstract search(query: string): Promise<SearchResult>
 }

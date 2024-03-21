@@ -1,4 +1,4 @@
-import { Artist, MusicService, Playlist, SearchResult, Track } from './music_service.js'
+import { Artist, ITrack, MusicService, Playlist, SearchResult } from './music_service.js'
 
 interface DeezerPlaylist {
   id: number
@@ -124,7 +124,7 @@ export default class DeezerService extends MusicService {
     }
   }
 
-  async getTrack(trackId: string): Promise<Track> {
+  async getTrack(trackId: string): Promise<ITrack> {
     const track = await fetch(`https://api.deezer.com/track/${trackId}`).then(
       (res) => res.json() as Promise<DeezerTrack>
     )

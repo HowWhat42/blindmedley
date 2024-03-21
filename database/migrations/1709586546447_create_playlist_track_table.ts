@@ -8,8 +8,8 @@ export default class extends BaseSchema {
       table.uuid('track_id').references('tracks.id').onDelete('CASCADE')
       table.uuid('playlist_id').references('playlists.id').onDelete('CASCADE')
 
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.timestamp('created_at').defaultTo(this.now())
+      table.timestamp('updated_at').defaultTo(this.now())
     })
   }
 

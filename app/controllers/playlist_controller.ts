@@ -2,7 +2,9 @@ import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
 
 import Playlist from '#models/playlist'
+import Track from '#models/track'
 import DeezerService from '#services/deezer_service'
+import { ITrack } from '#services/music_service'
 import SpotifyService from '#services/spotify_service'
 
 @inject()
@@ -101,11 +103,24 @@ export default class PlaylistController {
 
     const playlist = await Playlist.findOrFail(id)
 
-    await playlist.related('tracks').createMany(deezerPlaylist.tracks)
+    for (const track of deezerPlaylist.tracks) {
+      await this.attachOrCreateTrack(playlist, track)
+    }
 
     return response.redirect().toRoute('playlists.show', {
       id: playlist.id,
     })
+  }
+
+  async attachOrCreateTrack(playlist: Playlist, track: ITrack) {
+    const existingTrack = await Track.findBy('provider_id', track.provider_id)
+
+    if (existingTrack) {
+      await playlist.related('tracks').attach([existingTrack.id])
+      return
+    }
+
+    await playlist.related('tracks').create(track)
   }
 
   async importSpotify({ request, response }: HttpContext) {
@@ -116,8 +131,11 @@ export default class PlaylistController {
 
     const playlist = await Playlist.findOrFail(id)
 
-    await playlist.related('tracks').createMany(spotifyPlaylist.tracks)
+    for (const track of spotifyPlaylist.tracks) {
+      await this.attachOrCreateTrack(playlist, track)
+    }
 
+    // TODO: Refactor this into a service
     if (spotifyPlaylist.noPreviewTracks && spotifyPlaylist.noPreviewTracks.length > 0) {
       for (const track of spotifyPlaylist.noPreviewTracks) {
         const result = await this.deezerService.search(track.title)

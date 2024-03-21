@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import Token from '#models/token'
 import env from '#start/env'
 
-import { Artist, MusicService, Playlist, SearchResult, Track } from './music_service.js'
+import { Artist, ITrack, MusicService, Playlist, SearchResult } from './music_service.js'
 
 interface SpotifyTrack {
   album: SpotifyAlbum
@@ -218,7 +218,7 @@ export default class SpotifyService extends MusicService {
     }
   }
 
-  async getTrack(trackId: string): Promise<Track> {
+  async getTrack(trackId: string): Promise<ITrack> {
     const accessToken = await this.getAccessToken()
     const track = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
       headers: {

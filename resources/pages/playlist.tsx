@@ -75,7 +75,7 @@ const Playlist = ({ playlist }: { playlist: any }) => {
             </TableHeader>
             <TableBody>
               {playlist.tracks.map((track: any) => (
-                <Track key={track.id} track={track} />
+                <Track key={track.id} playlistId={playlist.id} track={track} />
               ))}
             </TableBody>
           </Table>

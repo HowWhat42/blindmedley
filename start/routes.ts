@@ -24,7 +24,9 @@ router
     router.get('/playlists/:id', [PlaylistController, 'show']).as('playlists.show')
     router.post('/playlists', [PlaylistController, 'store'])
     router.post('/playlists/:id/import', [PlaylistController, 'import'])
+    router.put('/playlists/:id/add-track', [PlaylistController, 'addTrack'])
     router.put('/playlists/:id', [PlaylistController, 'update'])
+    router.delete('/playlists/:id/remove-track', [PlaylistController, 'removeTrack'])
     router.delete('/playlists/:id', [PlaylistController, 'destroy'])
 
     router.get('/profile', ({ inertia }) => inertia.render('profile'))

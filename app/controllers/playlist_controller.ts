@@ -155,14 +155,37 @@ export default class PlaylistController {
   }
 
   async addTrack({ request, response }: HttpContext) {
-    const { playlistId, trackId } = request.all()
+    const { id } = request.params()
+    const { trackId } = request.all()
 
-    const playlist = await Playlist.findOrFail(playlistId)
+    const playlist = await Playlist.findOrFail(id)
 
     const track = await this.deezerService.getTrack(trackId)
 
     await playlist.related('tracks').create(track)
 
-    return response.json(playlist)
+    return response.redirect().toRoute('playlists.show', {
+      id: playlist.id,
+    })
+  }
+
+  async removeTrack({ request, response }: HttpContext) {
+    const { id } = request.params()
+    const { trackId } = request.all()
+
+    const playlist = await Playlist.findOrFail(id)
+
+    await playlist.related('tracks').detach([trackId])
+
+    const track = await Track.findOrFail(trackId)
+
+    const associatedPlaylists = await track.related('playlists').query()
+    if (associatedPlaylists && associatedPlaylists.length === 0) {
+      await track.delete()
+    }
+
+    return response.redirect().toRoute('playlists.show', {
+      id: playlist.id,
+    })
   }
 }

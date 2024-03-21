@@ -13,6 +13,7 @@ import { middleware } from './kernel.js'
 
 const AuthController = () => import('#controllers/auth_controller')
 const PlaylistController = () => import('#controllers/playlist_controller')
+const TokensController = () => import('#controllers/tokens_controller')
 
 router
   .group(() => {
@@ -28,6 +29,8 @@ router
     router.put('/playlists/:id', [PlaylistController, 'update'])
     router.delete('/playlists/:id/remove-track', [PlaylistController, 'removeTrack'])
     router.delete('/playlists/:id', [PlaylistController, 'destroy'])
+
+    router.get('/tokens/spotify', [TokensController, 'spotify'])
 
     router.get('/profile', ({ inertia }) => inertia.render('profile'))
   })

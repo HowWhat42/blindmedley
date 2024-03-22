@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { Checkbox } from '#components/ui/checkbox'
+
 import { Button } from '../ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
@@ -13,6 +15,7 @@ import { Input } from '../ui/input'
 
 const PlaylistFormSchema = z.object({
   title: z.string().min(3).max(255),
+  isPublic: z.boolean(),
 })
 
 type PlaylistFormValues = z.infer<typeof PlaylistFormSchema>
@@ -30,6 +33,7 @@ const EditPlaylistDialog = ({
     resolver: zodResolver(PlaylistFormSchema),
     defaultValues: {
       title: playlist.title ?? '',
+      isPublic: playlist.isPublic ?? false,
     },
   })
 
@@ -70,6 +74,20 @@ const EditPlaylistDialog = ({
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="isPublic"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-2">
+                  <FormControl>
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                  <FormLabel className="leading-none">Public playlist</FormLabel>
                   <FormMessage />
                 </FormItem>
               )}

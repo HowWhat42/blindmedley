@@ -50,10 +50,11 @@ export default class PlaylistController {
   }
 
   async store({ request, response }: HttpContext) {
-    const { title } = request.all()
+    const { title, isPublic } = request.all()
 
     const playlist = await Playlist.create({
       title,
+      isPublic,
     })
 
     return response.redirect().toRoute('playlists.show', {
@@ -64,9 +65,10 @@ export default class PlaylistController {
   async update({ params, request, response }: HttpContext) {
     const playlist = await Playlist.findOrFail(params.id)
 
-    const { title } = request.all()
+    const { title, isPublic } = request.all()
 
     playlist.title = title
+    playlist.isPublic = isPublic
 
     await playlist.save()
 

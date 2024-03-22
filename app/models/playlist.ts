@@ -16,6 +16,9 @@ export default class Playlist extends BaseModel {
   @column()
   declare cover_url: string | null
 
+  @column()
+  declare isPublic: boolean
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

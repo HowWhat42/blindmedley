@@ -23,8 +23,6 @@ const Playlist = ({ playlist }: { playlist: any }) => {
     })
   }
 
-  console.log(playlist)
-
   return (
     <>
       <Head title={playlist.title} />

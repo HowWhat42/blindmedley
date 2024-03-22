@@ -130,19 +130,17 @@ export default class SpotifyService extends MusicService {
     return token.accessToken
   }
 
-  async setAccessToken(accessToken: string, refreshToken: string, expiresIn: number) {
+  async setAccessToken(accessToken: string, expiresIn: number) {
     const token = await Token.query().where('name', 'spotify').first()
 
     if (token) {
       token.accessToken = accessToken
-      token.refreshToken = refreshToken
       token.expiresAt = DateTime.local().plus({ seconds: expiresIn })
       await token.save()
     } else {
       await Token.create({
         name: 'spotify',
         accessToken: accessToken,
-        refreshToken: refreshToken,
         expiresAt: DateTime.local().plus({ seconds: expiresIn }),
       })
     }
@@ -150,6 +148,8 @@ export default class SpotifyService extends MusicService {
 
   async refreshAccessToken() {
     const token = await Token.query().where('name', 'spotify').first()
+    const SPOTIFY_CLIENT_ID = env.get('SPOTIFY_CLIENT_ID')
+    const SPOTIFY_CLIENT_SECRET = env.get('SPOTIFY_CLIENT_SECRET')
 
     if (!token) {
       throw new Error('Token not found')
@@ -159,11 +159,13 @@ export default class SpotifyService extends MusicService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Basic ${Buffer.from(
+          `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+        ).toString('base64')}`,
       },
       body: new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: token.refreshToken,
-        client_id: env.get('SPOTIFY_CLIENT_ID'),
       }),
     })
 
@@ -174,9 +176,8 @@ export default class SpotifyService extends MusicService {
     const data = (await response.json()) as {
       access_token: string
       expires_in: number
-      refresh_token: string
     }
-    await this.setAccessToken(data.access_token, data.refresh_token, data.expires_in)
+    await this.setAccessToken(data.access_token, data.expires_in)
   }
 
   async getPlaylist(playlistId: string): Promise<Playlist> {
@@ -187,9 +188,35 @@ export default class SpotifyService extends MusicService {
       },
     }).then((res) => res.json() as Promise<SpotifyPlaylist>)
 
-    const noPreviewTracks = playlist.tracks.items.filter((item) => !item.track.preview_url)
+    let nextPage = playlist.tracks.next
+    let tracks = playlist.tracks.items
 
-    const filteredTracks = playlist.tracks.items.filter((item) => item.track.preview_url)
+    while (nextPage) {
+      const nextTracks = await fetch(nextPage, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((res) => res.json() as Promise<Tracks>)
+      nextPage = nextTracks.next
+
+      tracks = tracks.concat(nextTracks.items)
+    }
+
+    const noPreviewTracks = tracks.filter(
+      (item) =>
+        !item.track.preview_url ||
+        !item.track.album.release_date ||
+        !item.track.name ||
+        !item.track.artists[0].name
+    )
+
+    const filteredTracks = tracks.filter(
+      (item) =>
+        item.track.preview_url &&
+        item.track.album.release_date &&
+        item.track.name &&
+        item.track.artists[0].name
+    )
 
     return {
       id: playlist.id,
@@ -198,7 +225,7 @@ export default class SpotifyService extends MusicService {
         id: item.track.id,
         title: item.track.name,
         artist: item.track.artists[0].name,
-        release_date: item.track.album.release_date,
+        release_date: new Date(item.track.album.release_date).getFullYear().toString(),
         preview_url: item.track.preview_url!,
         provider: 'spotify',
         provider_id: item.track.id,
@@ -209,7 +236,7 @@ export default class SpotifyService extends MusicService {
         id: item.track.id,
         title: item.track.name,
         artist: item.track.artists[0].name,
-        release_date: item.track.album.release_date,
+        release_date: new Date(item.track.album.release_date).getFullYear().toString(),
         provider: 'spotify',
         provider_id: item.track.id,
         track_url: item.track.external_urls.spotify,
@@ -234,7 +261,7 @@ export default class SpotifyService extends MusicService {
       id: track.id,
       title: track.name,
       artist: track.artists[0].name,
-      release_date: track.album.release_date,
+      release_date: new Date(track.album.release_date).getFullYear().toString(),
       preview_url: track.preview_url,
       provider: 'spotify',
       provider_id: track.id,
@@ -262,13 +289,16 @@ export default class SpotifyService extends MusicService {
     }
   }
 
-  async search(query: string): Promise<SearchResult> {
+  async search(title: string, artist: string): Promise<SearchResult> {
     const accessToken = await this.getAccessToken()
-    const searchResult = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=track`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }).then((res) => res.json() as Promise<{ tracks: { items: SpotifyTrack[] } }>)
+    const searchResult = await fetch(
+      `https://api.spotify.com/v1/search?q=track:${title}artist:${artist}&type=track`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    ).then((res) => res.json() as Promise<{ tracks: { items: SpotifyTrack[] } }>)
 
     const filteredTracks = searchResult.tracks.items.filter((track) => track.preview_url)
 
@@ -277,7 +307,7 @@ export default class SpotifyService extends MusicService {
         id: track.id,
         title: track.name,
         artist: track.artists[0].name,
-        release_date: track.album.release_date,
+        release_date: new Date(track.album.release_date).getFullYear().toString(),
         preview_url: track.preview_url!,
         provider: 'spotify',
         provider_id: track.id,

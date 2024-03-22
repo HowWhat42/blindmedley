@@ -9,7 +9,7 @@ import { Toaster } from './components/ui/sonner'
 const appName = import.meta.env.VITE_APP_NAME || 'BlindMedley'
 
 createInertiaApp({
-  progress: { color: '#5468FF', delay: 250, includeCSS: true, showSpinner: false },
+  progress: { color: '#7D00FA', delay: 250, includeCSS: true, showSpinner: false },
 
   title: (title: string) => `${title} - ${appName}`,
 

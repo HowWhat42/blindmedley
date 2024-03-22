@@ -30,5 +30,5 @@ export abstract class MusicService {
   abstract getPlaylist(playlistId: string): Promise<Playlist>
   abstract getTrack(trackId: string): Promise<ITrack>
   abstract getArtist(artistId: string): Promise<Artist>
-  abstract search(query: string): Promise<SearchResult>
+  abstract search(title: string, artist: string): Promise<SearchResult>
 }

@@ -113,14 +113,18 @@ export default class PlaylistController {
   }
 
   async attachOrCreateTrack(playlist: Playlist, track: ITrack) {
-    const existingTrack = await Track.findBy('provider_id', track.provider_id)
+    try {
+      const existingTrack = await Track.findBy('provider_id', track.provider_id)
 
-    if (existingTrack) {
-      await playlist.related('tracks').attach([existingTrack.id])
-      return
+      if (existingTrack) {
+        await playlist.related('tracks').attach([existingTrack.id])
+        return
+      }
+
+      await playlist.related('tracks').create(track)
+    } catch (error) {
+      console.error(error, track)
     }
-
-    await playlist.related('tracks').create(track)
   }
 
   async importSpotify({ request, response }: HttpContext) {
@@ -137,14 +141,11 @@ export default class PlaylistController {
 
     // TODO: Refactor this into a service
     if (spotifyPlaylist.noPreviewTracks && spotifyPlaylist.noPreviewTracks.length > 0) {
-      for (const track of spotifyPlaylist.noPreviewTracks) {
-        const result = await this.deezerService.search(track.title)
-        if (result) {
-          await playlist.related('tracks').create({
-            title: result.tracks[0].title,
-            artist: result.tracks[0].artist,
-            preview_url: result.tracks[0].preview_url,
-          })
+      for (const noPreviewTrack of spotifyPlaylist.noPreviewTracks) {
+        const result = await this.deezerService.search(noPreviewTrack.title, noPreviewTrack.artist)
+        if (result.tracks.length > 0) {
+          const track = await this.deezerService.getTrack(result.tracks[0].provider_id)
+          await playlist.related('tracks').create(track)
         }
       }
     }

@@ -47,6 +47,7 @@ interface DeezerTrack {
   track_position: number
   disk_number: number
   rank: number
+  release_date: string
   time_add: number
   explicit_lyrics: boolean
   explicit_content_lyrics: number
@@ -105,8 +106,6 @@ export default class DeezerService extends MusicService {
       (res) => res.json() as Promise<DeezerPlaylist>
     )
 
-    console.log(playlist.tracks.data)
-
     return {
       id: playlist.id.toString(),
       title: playlist.title,
@@ -133,7 +132,7 @@ export default class DeezerService extends MusicService {
       id: track.id.toString(),
       title: track.title,
       artist: track.artist.name,
-      release_date: new Date(track.time_add * 1000).getFullYear().toString(),
+      release_date: new Date(track.release_date).getFullYear().toString(),
       preview_url: track.preview,
       provider: 'deezer',
       provider_id: track.id.toString(),
@@ -153,10 +152,10 @@ export default class DeezerService extends MusicService {
     }
   }
 
-  async search(query: string): Promise<SearchResult> {
-    const searchResult = await fetch(`https://api.deezer.com/search?q=track:"${query}"`).then(
-      (res) => res.json() as Promise<SearchTrack>
-    )
+  async search(title: string, artist: string): Promise<SearchResult> {
+    const searchResult = await fetch(
+      `https://api.deezer.com/search?q=track:"${title}"artist:"${artist}"`
+    ).then((res) => res.json() as Promise<SearchTrack>)
 
     return {
       tracks: searchResult.data.map((track) => ({

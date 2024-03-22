@@ -103,7 +103,8 @@ export default class PlaylistController {
 
     const playlist = await Playlist.findOrFail(id)
 
-    for (const track of deezerPlaylist.tracks) {
+    for (const rawTrack of deezerPlaylist.tracks) {
+      const track = await this.deezerService.getTrack(rawTrack.provider_id)
       await this.attachOrCreateTrack(playlist, track)
     }
 

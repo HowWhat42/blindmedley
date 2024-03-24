@@ -5,7 +5,7 @@ import { Layout } from '#components/Layout/layout'
 import CreatePlaylistDialog from '../components/dialogs/create_playlist'
 import { Button } from '../components/ui/button'
 
-export default function Home() {
+export default function Home({ user }: { user: any }) {
   return (
     <>
       <Head title="Homepage" />
@@ -13,7 +13,7 @@ export default function Home() {
       <div>
         <div className="flex justify-between">
           <h2>Trending Playlists</h2>
-          <CreatePlaylistDialog>
+          <CreatePlaylistDialog user={user}>
             <Button>Create Playlist</Button>
           </CreatePlaylistDialog>
         </div>

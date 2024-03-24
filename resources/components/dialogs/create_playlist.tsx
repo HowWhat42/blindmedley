@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { router } from '@inertiajs/react'
 import { Loader2Icon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -20,18 +20,8 @@ const PlaylistFormSchema = z.object({
 
 type PlaylistFormValues = z.infer<typeof PlaylistFormSchema>
 
-const CreatePlaylistDialog = ({ children }: { children: React.ReactNode }) => {
+const CreatePlaylistDialog = ({ user, children }: { user: any; children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
-
-  useEffect(() => {
-    const getUserRole = async () => {
-      const userRole = user.role // Supposons que cette fonction renvoie le rôle de l'utilisateur
-      setIsAdmin(userRole === 'admin')
-    }
-
-    getUserRole()
-  }, [])
 
   const form = useForm<PlaylistFormValues>({
     resolver: zodResolver(PlaylistFormSchema),
@@ -81,7 +71,7 @@ const CreatePlaylistDialog = ({ children }: { children: React.ReactNode }) => {
               )}
             />
 
-            {isAdmin && (
+            {user.role === 'admin' && (
               <FormField
                 control={form.control}
                 name="isPublic"

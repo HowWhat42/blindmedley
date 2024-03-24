@@ -31,11 +31,13 @@ const PlaylistDialog = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { title, isPublic } = playlist ?? {}
+
   const form = useForm<PlaylistFormValues>({
     resolver: zodResolver(PlaylistFormSchema),
     defaultValues: {
-      title: playlist.title ?? '',
-      isPublic: playlist.isPublic ?? false,
+      title: title ?? '',
+      isPublic: isPublic ?? false,
     },
   })
 

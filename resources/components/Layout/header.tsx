@@ -19,6 +19,7 @@ const Header = ({ user }: { user: any }) => {
       <div className="flex items-center gap-3">
         <Popover>
           <PopoverTrigger className="flex items-center gap-2">
+            <p>{user.role}</p>
             <p>{user.userName}</p>
             <Avatar>
               <AvatarFallback>{user.userName[0].toUpperCase()}</AvatarFallback>

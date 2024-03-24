@@ -22,6 +22,12 @@ type PlaylistFormValues = z.infer<typeof PlaylistFormSchema>
 
 const CreatePlaylistDialog = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(false)
+  const getUserRole = async () => {
+    const userRole = user.role
+    setIsAdmin(userRole === 'admin')
+  }
+  getUserRole()
+
   const form = useForm<PlaylistFormValues>({
     resolver: zodResolver(PlaylistFormSchema),
     defaultValues: {
@@ -70,19 +76,21 @@ const CreatePlaylistDialog = ({ children }: { children: React.ReactNode }) => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="isPublic"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-2">
-                  <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                  <FormLabel className="leading-none">Public playlist</FormLabel>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {isAdmin && (
+              <FormField
+                control={form.control}
+                name="isPublic"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-2">
+                    <FormControl>
+                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <FormLabel className="leading-none">Public playlist</FormLabel>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <Button type="submit" disabled={isLoading}>
               {isLoading ? <Loader2Icon size={24} className="animate-spin" /> : 'Create Playlist'}

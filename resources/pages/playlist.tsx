@@ -4,14 +4,14 @@ import { toast } from 'sonner'
 
 import DeleteCard from '#components/delete_card'
 import AddTrackDialog from '#components/dialogs/add_track'
-import EditPlaylistDialog from '#components/dialogs/edit_playlist'
 import ImportPlaylistDialog from '#components/dialogs/import_playlist'
+import PlaylistDialog from '#components/dialogs/playlist_dialog'
 import { Layout } from '#components/Layout/layout'
 import Track from '#components/track'
 import { Button } from '#components/ui/button'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '#components/ui/table'
 
-const Playlist = ({ playlist }: { playlist: any }) => {
+const Playlist = ({ playlist, user }: { playlist: any; user: any }) => {
   const onDelete = () => {
     router.delete(`/playlists/${playlist.id}`, {
       onSuccess: () => {
@@ -35,11 +35,11 @@ const Playlist = ({ playlist }: { playlist: any }) => {
                 <PlusIcon size={20} />
               </Button>
             </AddTrackDialog>
-            <EditPlaylistDialog playlist={playlist}>
+            <PlaylistDialog user={user} playlist={playlist}>
               <Button size="icon" variant="secondary">
                 <EditIcon size={20} />
               </Button>
-            </EditPlaylistDialog>
+            </PlaylistDialog>
             <ImportPlaylistDialog playlist={playlist}>
               <Button size="icon" variant="secondary">
                 <ImportIcon size={20} />

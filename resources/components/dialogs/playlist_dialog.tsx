@@ -20,12 +20,14 @@ const PlaylistFormSchema = z.object({
 
 type PlaylistFormValues = z.infer<typeof PlaylistFormSchema>
 
-const EditPlaylistDialog = ({
+const PlaylistDialog = ({
   children,
+  user,
   playlist,
 }: {
   children: React.ReactNode
-  playlist: any
+  user: any
+  playlist?: any
 }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -37,7 +39,7 @@ const EditPlaylistDialog = ({
     },
   })
 
-  const onSubmit = async (values: PlaylistFormValues) => {
+  const handleEdit = async (values: PlaylistFormValues) => {
     router.put(`/playlists/${playlist.id}`, values, {
       onStart: () => {
         setIsLoading(true)
@@ -56,6 +58,25 @@ const EditPlaylistDialog = ({
     })
   }
 
+  const handleCreate = async (values: PlaylistFormValues) => {
+    router.post('/playlists', values, {
+      onStart: () => {
+        setIsLoading(true)
+      },
+      onSuccess: () => {
+        setIsLoading(false)
+        setIsDialogOpen(false)
+        toast.success('Playlist created')
+      },
+      onError: (error) => {
+        setIsLoading(false)
+        toast.error('Failed to create playlist', {
+          description: error.message,
+        })
+      },
+    })
+  }
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -64,7 +85,10 @@ const EditPlaylistDialog = ({
           <DialogTitle>Edit Playlist</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+          <form
+            onSubmit={form.handleSubmit(playlist ? handleEdit : handleCreate)}
+            className="space-y-3"
+          >
             <FormField
               control={form.control}
               name="title"
@@ -79,22 +103,30 @@ const EditPlaylistDialog = ({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="isPublic"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-2">
-                  <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                  <FormLabel className="leading-none">Public playlist</FormLabel>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {user.role === 'admin' && (
+              <FormField
+                control={form.control}
+                name="isPublic"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-2">
+                    <FormControl>
+                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <FormLabel className="leading-none">Public playlist</FormLabel>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? <Loader2Icon size={24} className="animate-spin" /> : 'Edit Playlist'}
+              {isLoading ? (
+                <Loader2Icon size={24} className="animate-spin" />
+              ) : playlist ? (
+                'Edit Playlist'
+              ) : (
+                'Create Playlist'
+              )}
             </Button>
           </form>
         </Form>
@@ -103,4 +135,4 @@ const EditPlaylistDialog = ({
   )
 }
 
-export default EditPlaylistDialog
+export default PlaylistDialog

@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react'
 
+import PlaylistDialog from '#components/dialogs/playlist_dialog'
 import { Layout } from '#components/Layout/layout'
 
-import CreatePlaylistDialog from '../components/dialogs/create_playlist'
 import PlaylistCard from '../components/playlist_card'
 import { Button } from '../components/ui/button'
 
@@ -13,9 +13,9 @@ const Playlist = ({ playlists, user }: { playlists: any; user: any }) => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2>Playlists</h2>
-          <CreatePlaylistDialog user={user}>
+          <PlaylistDialog user={user}>
             <Button>Create Playlist</Button>
-          </CreatePlaylistDialog>
+          </PlaylistDialog>
         </div>
         <div className="flex flex-wrap gap-20">
           {playlists.map((playlist: any) => (

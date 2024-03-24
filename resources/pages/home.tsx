@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react'
 
+import PlaylistDialog from '#components/dialogs/playlist_dialog'
 import { Layout } from '#components/Layout/layout'
 
-import CreatePlaylistDialog from '../components/dialogs/create_playlist'
 import { Button } from '../components/ui/button'
 
 export default function Home({ user }: { user: any }) {
@@ -13,9 +13,9 @@ export default function Home({ user }: { user: any }) {
       <div>
         <div className="flex justify-between">
           <h2>Trending Playlists</h2>
-          <CreatePlaylistDialog user={user}>
+          <PlaylistDialog user={user}>
             <Button>Create Playlist</Button>
-          </CreatePlaylistDialog>
+          </PlaylistDialog>
         </div>
       </div>
     </>

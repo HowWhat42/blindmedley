@@ -23,18 +23,6 @@ const History = () => {
             {HistoryData.map((history: any) => (
               <HistoryRow key={history.id} history={history} />
             ))}
-            {HistoryData1.map((history: any) => (
-              <HistoryRow key={history.id} history={history} />
-            ))}
-            {HistoryData1.map((history: any) => (
-              <HistoryRow key={history.id} history={history} />
-            ))}
-            {HistoryData.map((history: any) => (
-              <HistoryRow key={history.id} history={history} />
-            ))}
-            {HistoryData1.map((history: any) => (
-              <HistoryRow key={history.id} history={history} />
-            ))}
           </TableBody>
         </Table>
       </div>
@@ -55,9 +43,46 @@ const HistoryData = [
       minute: '2-digit',
     }),
   },
-]
-
-const HistoryData1 = [
+  {
+    id: '1',
+    name: 'Mystery',
+    type: 'Private',
+    score: 666,
+    date: new Date().toLocaleDateString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+  },
+  {
+    id: '1',
+    name: 'Mystery',
+    type: 'Private',
+    score: 666,
+    date: new Date().toLocaleDateString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+  },
+  {
+    id: '1',
+    name: 'Mystery',
+    type: 'Private',
+    score: 666,
+    date: new Date().toLocaleDateString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+  },
+  {
+    id: '1',
+    name: 'Mystery',
+    type: 'Private',
+    score: 666,
+    date: new Date().toLocaleDateString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+  },
   {
     id: '1',
     name: 'Mystery',

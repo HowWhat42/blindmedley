@@ -1,44 +1,27 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { router } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
 import { Button } from '../ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
-
-const PlaylistFormSchema = z.object({
-  title: z.string().min(3).max(255),
-})
-
-type PlaylistFormValues = z.infer<typeof PlaylistFormSchema>
+import { Label } from '../ui/label'
 
 const AddTrackDialog = ({ children, playlist }: { children: React.ReactNode; playlist: any }) => {
-  const [isLoading, setIsLoading] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const form = useForm<PlaylistFormValues>({
-    resolver: zodResolver(PlaylistFormSchema),
-    defaultValues: {
-      title: playlist.title ?? '',
-    },
+  const form = useForm({
+    title: '',
   })
 
-  const onSubmit = async (values: PlaylistFormValues) => {
-    router.put(`/playlists/${playlist.id}`, values, {
-      onStart: () => {
-        setIsLoading(true)
-      },
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    form.put(`/playlists/${playlist.id}`, {
       onSuccess: () => {
-        setIsLoading(false)
         setIsDialogOpen(false)
         toast.success('Track added')
       },
       onError: (error) => {
-        setIsLoading(false)
         toast.error('Failed to add track', {
           description: error.message,
         })
@@ -53,27 +36,24 @@ const AddTrackDialog = ({ children, playlist }: { children: React.ReactNode; pla
         <DialogHeader>
           <DialogTitle>Add track to playlist</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+        <form onSubmit={onSubmit} className="space-y-3">
+          <div className="grid gap-1">
+            <Label>Title</Label>
+            <Input
+              id="title"
+              placeholder="Rock"
+              type="text"
+              autoCorrect="off"
+              disabled={form.processing}
+              value={form.data.title}
+              onChange={(e) => form.setData('title', e.target.value)}
             />
+          </div>
 
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? <Loader2Icon size={24} className="animate-spin" /> : 'Add track'}
-            </Button>
-          </form>
-        </Form>
+          <Button type="submit" disabled={form.processing}>
+            {form.processing ? <Loader2Icon size={24} className="animate-spin" /> : 'Add track'}
+          </Button>
+        </form>
       </DialogContent>
     </Dialog>
   )

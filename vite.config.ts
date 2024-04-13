@@ -1,7 +1,9 @@
+import { getDirname } from '@adonisjs/core/helpers'
 import inertia from '@adonisjs/inertia/client'
 import adonisjs from '@adonisjs/vite/client'
 import react from '@vitejs/plugin-react'
 import autoprefixer from 'autoprefixer'
+import { resolve } from 'node:path'
 import tailwindcss from 'tailwindcss'
 import { defineConfig } from 'vite'
 
@@ -25,6 +27,12 @@ export default defineConfig({
   css: {
     postcss: {
       plugins: [tailwindcss, autoprefixer],
+    },
+  },
+  resolve: {
+    alias: {
+      '@/': `${resolve(getDirname(import.meta.url), 'resources')}/`,
+      '~/': `${resolve(getDirname(import.meta.url), '.')}/`,
     },
   },
 })

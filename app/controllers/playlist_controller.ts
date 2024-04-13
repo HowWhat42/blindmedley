@@ -6,6 +6,7 @@ import Track from '#models/track'
 import DeezerService from '#services/deezer_service'
 import { ITrack } from '#services/music_service'
 import SpotifyService from '#services/spotify_service'
+import { playlistValidator } from '#validators/playlist_validator'
 
 @inject()
 export default class PlaylistController {
@@ -15,14 +16,7 @@ export default class PlaylistController {
   ) {}
 
   async index({ inertia }: HttpContext) {
-    const rawPlaylists = await Playlist.query().withCount('tracks')
-
-    const playlists = rawPlaylists.map((playlist) => {
-      return {
-        ...playlist.$attributes,
-        tracks_count: playlist.$extras.tracks_count,
-      }
-    })
+    const playlists = await Playlist.query().withCount('tracks')
 
     return inertia.render('playlists', {
       playlists,
@@ -31,15 +25,7 @@ export default class PlaylistController {
 
   async show({ params, inertia }: HttpContext) {
     try {
-      const rawPlaylist = await Playlist.query()
-        .where('id', params.id)
-        .preload('tracks')
-        .firstOrFail()
-
-      const playlist = {
-        ...rawPlaylist.$attributes,
-        tracks: rawPlaylist.tracks,
-      }
+      const playlist = await Playlist.query().where('id', params.id).preload('tracks').firstOrFail()
 
       return inertia.render('playlist', {
         playlist,
@@ -50,7 +36,7 @@ export default class PlaylistController {
   }
 
   async store({ request, response }: HttpContext) {
-    const { title, isPublic } = request.all()
+    const { title, isPublic } = await request.validateUsing(playlistValidator)
 
     const playlist = await Playlist.create({
       title,

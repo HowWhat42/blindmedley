@@ -1,65 +1,28 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { router } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import { Loader2Icon } from 'lucide-react'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { Input } from './ui/input'
-
-const RegisterFormSchema = z
-  .object({
-    userName: z.string().min(3),
-    email: z.string().email(),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters long')
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character'
-      ),
-    confirmPassword: z.string().min(8),
-  })
-  .superRefine(({ confirmPassword, password }, ctx) => {
-    if (confirmPassword !== password) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'The passwords did not match',
-      })
-    }
-  })
-
-type RegisterFormValues = z.infer<typeof RegisterFormSchema>
+import { Label } from './ui/label'
+import PasswordField from './ui/password_field'
 
 const RegisterForm = () => {
-  const [isLoading, setIsLoading] = useState(false)
-  const defaultValues: Partial<RegisterFormValues> = {
+  const form = useForm({
     userName: '',
     email: '',
     password: '',
     confirmPassword: '',
-  }
-
-  const form = useForm<RegisterFormValues>({
-    resolver: zodResolver(RegisterFormSchema),
-    defaultValues,
   })
 
-  const onSubmit = (values: RegisterFormValues) => {
-    router.post('/register', values, {
-      onStart: () => {
-        setIsLoading(true)
-      },
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    form.post('/register', {
       onSuccess: () => {
-        setIsLoading(false)
         toast.success('Registered')
       },
       onError: (error) => {
-        setIsLoading(false)
         toast.error('Failed to register', {
           description: error.message,
         })
@@ -73,70 +36,62 @@ const RegisterForm = () => {
         <CardTitle className="font-geist text-neutral-800">Register</CardTitle>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="userName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base text-neutral-800">Username</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div className="grid gap-1">
+            <Label>Username</Label>
+            <Input
+              id="userName"
+              placeholder="john.doe"
+              type="userName"
+              autoCapitalize="none"
+              autoComplete="userName"
+              autoCorrect="off"
+              disabled={form.processing}
+              value={form.data.userName}
+              onChange={(e) => form.setData('userName', e.target.value)}
             />
+          </div>
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base text-neutral-800">Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="email" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+          <div className="grid gap-1">
+            <Label>Email</Label>
+            <Input
+              id="email"
+              placeholder="john.doe@example.com"
+              type="email"
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect="off"
+              disabled={form.processing}
+              value={form.data.email}
+              onChange={(e) => form.setData('email', e.target.value)}
             />
+          </div>
 
-            <div className="flex gap-2">
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="text-base text-neutral-800">Password</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="password" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="text-base text-neutral-800">Confirm password</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="password" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+          <div className="flex gap-2">
+            <PasswordField
+              id="password"
+              name="password"
+              divClassName="grid gap-1"
+              label="Password"
+              disabled={form.processing}
+              value={form.data.password}
+              onChange={(e) => form.setData('password', e.target.value)}
+            />
+            <PasswordField
+              id="confirmPassword"
+              name="confirmPassword"
+              divClassName="grid gap-1"
+              label="Confirm password"
+              disabled={form.processing}
+              value={form.data.password}
+              onChange={(e) => form.setData('confirmPassword', e.target.value)}
+            />
+          </div>
 
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? <Loader2Icon size={24} className="animate-spin" /> : 'Submit'}
-            </Button>
-          </form>
-        </Form>
+          <Button type="submit" disabled={form.processing}>
+            {form.processing ? <Loader2Icon size={24} className="animate-spin" /> : 'Submit'}
+          </Button>
+        </form>
       </CardContent>
     </Card>
   )

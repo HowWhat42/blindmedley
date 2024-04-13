@@ -1,3 +1,4 @@
+import type { InferPageProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { EditIcon, ImportIcon, PlusIcon, TrashIcon, UserIcon } from 'lucide-react'
 import { toast } from 'sonner'
@@ -10,8 +11,9 @@ import { Layout } from '#components/Layout/layout'
 import Track from '#components/track'
 import { Button } from '#components/ui/button'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '#components/ui/table'
+import type PlaylistController from '#controllers/playlist_controller'
 
-const Playlist = ({ playlist, user }: { playlist: any; user: any }) => {
+const Playlist = ({ playlist, user }: InferPageProps<PlaylistController, 'show'>) => {
   const onDelete = () => {
     router.delete(`/playlists/${playlist.id}`, {
       onSuccess: () => {

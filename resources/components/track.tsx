@@ -1,27 +1,21 @@
-import { router } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import { EditIcon, TrashIcon } from 'lucide-react'
-import { useState } from 'react'
 import { toast } from 'sonner'
 
 import { Button } from './ui/button'
 import { TableCell, TableRow } from './ui/table'
 
 const Track = ({ playlistId, track }: { playlistId: string; track: any }) => {
-  const [isLoading, setIsLoading] = useState(false)
+  const form = useForm()
   const handleDelete = () => {
-    router.delete(`/playlists/${playlistId}/remove-track`, {
+    form.delete(`/playlists/${playlistId}/remove-track`, {
       data: {
         trackId: track.id,
       },
-      onStart: () => {
-        setIsLoading(true)
-      },
       onSuccess: () => {
-        setIsLoading(false)
         toast.success('Track removed')
       },
       onError: () => {
-        setIsLoading(false)
         toast.error('Something went wrong')
       },
     })
@@ -55,10 +49,10 @@ const Track = ({ playlistId, track }: { playlistId: string; track: any }) => {
       {/* <TableCell>{track.album ?? 'Single'}</TableCell> */}
       <TableCell>{track.releaseDate}</TableCell>
       <TableCell className="space-x-3 text-right">
-        <Button disabled={isLoading} size="icon" variant="secondary">
+        <Button disabled={form.processing} size="icon" variant="secondary">
           <EditIcon size={20} />
         </Button>
-        <Button disabled={isLoading} onClick={handleDelete} size="icon" variant="destructive">
+        <Button disabled={form.processing} onClick={handleDelete} size="icon" variant="destructive">
           <TrashIcon size={20} />
         </Button>
       </TableCell>

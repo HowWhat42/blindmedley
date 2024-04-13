@@ -1,46 +1,26 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { router } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import { Loader2Icon } from 'lucide-react'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { Input } from './ui/input'
-
-const LoginFormSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-})
-
-type LoginFormValues = z.infer<typeof LoginFormSchema>
+import { Label } from './ui/label'
+import PasswordField from './ui/password_field'
 
 const LoginForm = () => {
-  const [isLoading, setIsLoading] = useState(false)
-  const defaultValues: Partial<LoginFormValues> = {
+  const form = useForm({
     email: '',
     password: '',
-  }
-
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(LoginFormSchema),
-    defaultValues,
   })
 
-  const onSubmit = (values: LoginFormValues) => {
-    router.post('/login', values, {
-      onStart: () => {
-        setIsLoading(true)
-      },
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    form.post('/login', {
       onSuccess: () => {
-        setIsLoading(false)
         toast.success('Logged in')
       },
       onError: (error) => {
-        setIsLoading(false)
         toast.error('Failed to login', {
           description: error.message,
         })
@@ -54,41 +34,36 @@ const LoginForm = () => {
         <CardTitle className="font-geist text-neutral-800">Login</CardTitle>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base text-neutral-800">Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="email" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div className="grid gap-1">
+            <Label>Email</Label>
+            <Input
+              id="email"
+              placeholder="john.doe@example.com"
+              type="email"
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect="off"
+              disabled={form.processing}
+              value={form.data.email}
+              onChange={(e) => form.setData('email', e.target.value)}
             />
+          </div>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base text-neutral-800">Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="password" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <PasswordField
+            id="password"
+            name="password"
+            divClassName="grid gap-1"
+            label="Password"
+            disabled={form.processing}
+            value={form.data.password}
+            onChange={(e) => form.setData('password', e.target.value)}
+          />
 
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? <Loader2Icon size={24} className="animate-spin" /> : 'Login'}
-            </Button>
-          </form>
-        </Form>
+          <Button type="submit" disabled={form.processing}>
+            {form.processing ? <Loader2Icon size={24} className="animate-spin" /> : 'Login'}
+          </Button>
+        </form>
       </CardContent>
     </Card>
   )

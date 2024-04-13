@@ -1,29 +1,12 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { router } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
 import { Button } from '../ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '../ui/form'
 import { Input } from '../ui/input'
-
-const PlaylistFormSchema = z.object({
-  url: z.string(),
-})
-
-type PlaylistFormValues = z.infer<typeof PlaylistFormSchema>
+import { Label } from '../ui/label'
 
 const ImportPlaylistDialog = ({
   children,
@@ -32,46 +15,34 @@ const ImportPlaylistDialog = ({
   children: React.ReactNode
   playlist: any
 }) => {
-  const [isLoading, setIsLoading] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const form = useForm<PlaylistFormValues>({
-    resolver: zodResolver(PlaylistFormSchema),
-    defaultValues: {
-      url: '',
-    },
+  const form = useForm({
+    url: '',
   })
 
-  const onSubmit = async (values: PlaylistFormValues) => {
-    if (!values.url) {
-      return
-    }
-
-    if (!values.url.includes('spotify') && !values.url.includes('deezer')) {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!form.data.url.includes('spotify') && !form.data.url.includes('deezer')) {
       toast.error('Invalid URL')
       return
     }
 
-    const provider = values.url.includes('spotify') ? 'spotify' : 'deezer'
+    const provider = form.data.url.includes('spotify') ? 'spotify' : 'deezer'
 
-    if (values.url.includes('spotify')) {
-      values.url = values.url.replace('https://open.spotify.com/playlist/', '')
+    if (form.data.url.includes('spotify')) {
+      form.data.url = form.data.url.replace('https://open.spotify.com/playlist/', '')
     }
 
-    if (values.url.includes('deezer')) {
-      values.url = values.url.replace('https://www.deezer.com/fr/playlist/', '')
+    if (form.data.url.includes('deezer')) {
+      form.data.url = form.data.url.replace('https://www.deezer.com/fr/playlist/', '')
     }
 
-    router.post(`/playlists/${playlist.id}/import?provider=${provider}`, values, {
-      onStart: () => {
-        setIsLoading(true)
-      },
+    form.post(`/playlists/${playlist.id}/import?provider=${provider}`, {
       onSuccess: () => {
-        setIsLoading(false)
         setIsDialogOpen(false)
         toast.success('Playlist imported')
       },
       onError: (error) => {
-        setIsLoading(false)
         toast.error('Failed to import playlist', {
           description: error.message,
         })
@@ -86,30 +57,29 @@ const ImportPlaylistDialog = ({
         <DialogHeader>
           <DialogTitle>Import playlist</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <FormField
-              control={form.control}
-              name="url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>URL</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Enter the URL of the playlist you want to import (Spotify, Deezer)
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+        <form onSubmit={onSubmit} className="space-y-3">
+          <div className="space-y-1">
+            <Label>URL</Label>
+            <Input
+              id="url"
+              autoCorrect="off"
+              disabled={form.processing}
+              value={form.data.url}
+              onChange={(e) => form.setData('url', e.target.value)}
             />
+            <Label className="text-sm text-neutral-500 dark:text-neutral-400">
+              Enter the URL of the playlist you want to import (Spotify, Deezer)
+            </Label>
+          </div>
 
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? <Loader2Icon size={24} className="animate-spin" /> : 'Import playlist'}
-            </Button>
-          </form>
-        </Form>
+          <Button type="submit" disabled={form.processing}>
+            {form.processing ? (
+              <Loader2Icon size={24} className="animate-spin" />
+            ) : (
+              'Import playlist'
+            )}
+          </Button>
+        </form>
       </DialogContent>
     </Dialog>
   )

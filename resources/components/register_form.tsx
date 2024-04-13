@@ -37,7 +37,7 @@ const RegisterForm = () => {
       </CardHeader>
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-4">
-          <div className="grid gap-1">
+          <div className="space-y-1">
             <Label>Username</Label>
             <Input
               id="userName"
@@ -52,7 +52,7 @@ const RegisterForm = () => {
             />
           </div>
 
-          <div className="grid gap-1">
+          <div className="space-y-1">
             <Label>Email</Label>
             <Input
               id="email"
@@ -71,7 +71,7 @@ const RegisterForm = () => {
             <PasswordField
               id="password"
               name="password"
-              divClassName="grid gap-1"
+              divClassName="space-y-1 w-full"
               label="Password"
               disabled={form.processing}
               value={form.data.password}
@@ -80,10 +80,10 @@ const RegisterForm = () => {
             <PasswordField
               id="confirmPassword"
               name="confirmPassword"
-              divClassName="grid gap-1"
+              divClassName="space-y-1 w-full"
               label="Confirm password"
               disabled={form.processing}
-              value={form.data.password}
+              value={form.data.confirmPassword}
               onChange={(e) => form.setData('confirmPassword', e.target.value)}
             />
           </div>

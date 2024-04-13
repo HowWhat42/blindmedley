@@ -27,9 +27,7 @@ const Track = ({ playlistId, track }: { playlistId: string; track: any }) => {
         <a href={track.trackUrl} target="_blank" rel="noreferrer">
           <Button size="icon" variant="ghost">
             <img
-              src={
-                track.provider === 'deezer' ? '/assets/deezer_logo.png' : '/assets/spotify_logo.png'
-              }
+              src={track.provider === 'deezer' ? '/deezer_logo.png' : '/spotify_logo.png'}
               alt="Source"
               className="size-5"
             />

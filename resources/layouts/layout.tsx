@@ -9,7 +9,9 @@ export function Layout({ children, user }: Props) {
   return (
     <>
       <Header user={user} />
-      <main className="min-h-screen bg-purple-100 px-8 py-20 dark:bg-neutral-900">{children}</main>
+      <main className="min-h-[calc(100vh-64px)] bg-purple-100 p-8 dark:bg-neutral-900">
+        {children}
+      </main>
     </>
   )
 }

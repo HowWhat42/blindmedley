@@ -1,7 +1,7 @@
 import { createInertiaApp } from '@inertiajs/react'
 import ReactDOMServer from 'react-dom/server'
 
-import { Layout } from './components/Layout/layout'
+import { Layout } from './layouts/layout'
 
 export default function render(page: any) {
   return createInertiaApp({

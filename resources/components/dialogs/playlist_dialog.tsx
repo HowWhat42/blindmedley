@@ -23,33 +23,29 @@ const PlaylistDialog = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { title, isPublic } = playlist ?? {}
 
-  const error = useError('auth')
+  const error = useError('playlist')
 
   const form = useForm({
     title: title ?? '',
     isPublic: isPublic ?? false,
   })
 
-  // const handleEdit = async (values: PlaylistFormValues) => {
-  //   router.put(`/playlists/${playlist.id}`, values, {
-  //     onStart: () => {
-  //       setIsLoading(true)
-  //     },
-  //     onSuccess: () => {
-  //       setIsLoading(false)
-  //       setIsDialogOpen(false)
-  //       toast.success('Playlist edited')
-  //     },
-  //     onError: (error) => {
-  //       setIsLoading(false)
-  //       toast.error('Failed to edit playlist', {
-  //         description: error.message,
-  //       })
-  //     },
-  //   })
-  // }
+  const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    form.put(`/playlists/${playlist.id}`, {
+      onSuccess: () => {
+        setIsDialogOpen(false)
+        toast.success('Playlist edited')
+      },
+      onError: (error) => {
+        toast.error('Failed to edit playlist', {
+          description: error.message,
+        })
+      },
+    })
+  }
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     form.post('/playlists', {
       onSuccess: () => {
@@ -69,9 +65,9 @@ const PlaylistDialog = ({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Playlist</DialogTitle>
+          <DialogTitle>{playlist ? 'Edit' : 'Create'} Playlist</DialogTitle>
         </DialogHeader>
-        <form onSubmit={onSubmit} className="space-y-3">
+        <form onSubmit={playlist ? handleEdit : handleCreate} className="space-y-3">
           <div className="grid gap-1">
             <Label>Title</Label>
             <Input
@@ -102,7 +98,7 @@ const PlaylistDialog = ({
             {form.processing ? (
               <Loader2Icon size={24} className="animate-spin" />
             ) : (
-              'Create Playlist'
+              `${playlist ? 'Edit' : 'Create'} Playlist`
             )}
           </Button>
         </form>

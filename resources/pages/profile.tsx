@@ -1,6 +1,6 @@
 import { Head, usePage } from '@inertiajs/react'
 
-import { Layout } from '#components/Layout/layout'
+import { Layout } from '#resources/layouts/layout'
 
 import ProfileCard from '../components/profile_card'
 

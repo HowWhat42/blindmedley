@@ -1,7 +1,7 @@
 import { Head } from '@inertiajs/react'
 
 import PlaylistDialog from '#components/dialogs/playlist_dialog'
-import { Layout } from '#components/Layout/layout'
+import { Layout } from '#resources/layouts/layout'
 
 import { Button } from '../components/ui/button'
 

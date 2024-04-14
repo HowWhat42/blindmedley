@@ -2,6 +2,8 @@ import { useForm } from '@inertiajs/react'
 import { Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 
+import useError from '#resources/hooks/use_error'
+
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Input } from './ui/input'
@@ -15,6 +17,8 @@ const RegisterForm = () => {
     password: '',
     confirmPassword: '',
   })
+
+  const error = useError('auth')
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -88,6 +92,7 @@ const RegisterForm = () => {
             />
           </div>
 
+          {error && <p className="text-sm text-red-500">{error}</p>}
           <Button type="submit" disabled={form.processing}>
             {form.processing ? <Loader2Icon size={24} className="animate-spin" /> : 'Submit'}
           </Button>

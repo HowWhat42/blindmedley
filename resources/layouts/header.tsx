@@ -2,9 +2,9 @@ import { Link, router } from '@inertiajs/react'
 
 import { Avatar, AvatarFallback } from '#components/ui/avatar'
 
-import { ModeToggle } from '../mode_toggle'
-import { Button } from '../ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { ModeToggle } from '../components/mode_toggle'
+import { Button } from '../components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover'
 
 const Header = ({ user }: { user: any }) => {
   const handleLogout = () => {

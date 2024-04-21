@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react'
 import _ from 'lodash'
 import { Volume1Icon, Volume2Icon, VolumeXIcon } from 'lucide-react'
+import { useEffect } from 'react'
 import { toast } from 'sonner'
 
 import { Avatar, AvatarFallback } from '#components/ui/avatar'
@@ -17,6 +18,11 @@ const Header = ({ user }: { user: User }) => {
   const handleLogout = () => {
     router.post('/logout')
   }
+
+  useEffect(() => {
+    setVolume(user.volume / 100)
+    console.log('volume', user.volume)
+  }, [user.volume])
 
   const handleVolumeChange = (value: number[]) => {
     router.put(

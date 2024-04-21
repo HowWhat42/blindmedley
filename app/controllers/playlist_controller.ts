@@ -146,13 +146,20 @@ export default class PlaylistController {
 
   async addTrack({ request, response }: HttpContext) {
     const { id } = request.params()
-    const { trackId } = request.all()
+    const { trackId, provider } = request.all()
 
     const playlist = await Playlist.findOrFail(id)
 
-    const track = await this.deezerService.getTrack(trackId)
+    let track
+    if (provider === 'deezer') {
+      track = await this.deezerService.getTrack(trackId)
+      await playlist.related('tracks').create(track)
+    }
 
-    await playlist.related('tracks').create(track)
+    if (provider === 'spotify') {
+      track = await this.spotifyService.getTrack(trackId)
+      await playlist.related('tracks').create(track)
+    }
 
     return response.redirect().toRoute('playlists.show', {
       id: playlist.id,

@@ -1,12 +1,17 @@
-import { PauseIcon, PlayIcon } from 'lucide-react'
-import React from 'react'
+import { router } from '@inertiajs/react'
+import { CheckIcon, Loader2Icon, PauseIcon, PlayIcon, PlusIcon } from 'lucide-react'
+import React, { useState } from 'react'
+import { toast } from 'sonner'
 
 import useAudioPlayerStore from '#resources/stores/audio_player_store'
 
 import { Button } from './ui/button'
 
-const SearchTrack = ({ track }) => {
+const SearchTrack = ({ track, playlistId }) => {
   const { trackId, audio, playing, togglePlay, setUrl } = useAudioPlayerStore()
+  const [loading, setLoading] = useState(false)
+  const [added, setAdded] = useState(false)
+
   const handlePlay = () => {
     if (audio.src !== track.previewUrl) {
       setUrl(track.previewUrl, track.id)
@@ -14,8 +19,33 @@ const SearchTrack = ({ track }) => {
 
     togglePlay()
   }
+
+  const handleAdd = () => {
+    setLoading(true)
+    router.put(
+      `/playlists/${playlistId}/add-track`,
+      {
+        trackId: track.id,
+        provider: track.provider,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Track added')
+          setLoading(false)
+          setAdded(true)
+        },
+        onError: (error) => {
+          setLoading(false)
+          toast.error('Failed to add track', {
+            description: error.message,
+          })
+        },
+      }
+    )
+  }
+
   return (
-    <div className="flex gap-3">
+    <div className="mr-3 flex gap-3">
       <a href={track.previewUrl} target="_blank" rel="noreferrer">
         <Button size="icon" variant="ghost">
           <img
@@ -32,6 +62,15 @@ const SearchTrack = ({ track }) => {
         <p>Artist: {track.artist}</p>
         <p>Title: {track.title}</p>
       </div>
+      <Button onClick={handleAdd} disabled={loading || added} size="icon" variant="secondary">
+        {loading ? (
+          <Loader2Icon size={24} className="animate-spin" />
+        ) : added ? (
+          <CheckIcon size={20} />
+        ) : (
+          <PlusIcon size={20} />
+        )}
+      </Button>
     </div>
   )
 }

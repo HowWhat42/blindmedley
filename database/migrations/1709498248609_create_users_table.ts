@@ -14,6 +14,7 @@ export default class extends BaseSchema {
       table.boolean('email_verified').defaultTo(false)
       table.integer('xp').defaultTo(0)
       table.integer('level').defaultTo(1)
+      table.integer('volume').defaultTo(50)
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

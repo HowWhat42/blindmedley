@@ -1,14 +1,49 @@
 import { Link, router } from '@inertiajs/react'
+import _ from 'lodash'
+import { Volume1Icon, Volume2Icon, VolumeXIcon } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Avatar, AvatarFallback } from '#components/ui/avatar'
+import type User from '#models/user'
+import { Slider } from '#resources/components/ui/slider'
+import useAudioPlayerStore from '#resources/stores/audio_player_store'
 
 import { ModeToggle } from '../components/mode_toggle'
 import { Button } from '../components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover'
 
-const Header = ({ user }: { user: any }) => {
+const Header = ({ user }: { user: User }) => {
+  const { setVolume } = useAudioPlayerStore()
   const handleLogout = () => {
     router.post('/logout')
+  }
+
+  const handleVolumeChange = (value: number[]) => {
+    router.put(
+      '/profile/volume',
+      {
+        volume: value[0],
+      },
+      {
+        onSuccess: () => {
+          setVolume(value[0] / 100)
+        },
+        onError: () => {
+          toast.error('Failed to update volume')
+        },
+      }
+    )
+  }
+
+  const getVolumeIcon = (volume: number) => {
+    switch (volume) {
+      case 0:
+        return <VolumeXIcon className="size-4" />
+      case 100:
+        return <Volume2Icon className="size-4" />
+      default:
+        return <Volume1Icon className="size-4" />
+    }
   }
 
   return (
@@ -25,7 +60,16 @@ const Header = ({ user }: { user: any }) => {
               <AvatarFallback>{user.userName[0].toUpperCase()}</AvatarFallback>
             </Avatar>
           </PopoverTrigger>
-          <PopoverContent className="mr-16">
+          <PopoverContent className="mr-16 space-y-2">
+            <div className="flex gap-2">
+              {getVolumeIcon(user.volume)}
+              <Slider
+                onValueChange={(value: number[]) => _.throttle(handleVolumeChange, 500)(value)}
+                defaultValue={[user.volume]}
+                max={100}
+                step={1}
+              />
+            </div>
             <ModeToggle />
             <Link href={'/profile'}>
               <Button variant="ghost" className="w-full !justify-end text-right">

@@ -12,6 +12,7 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
 const AuthController = () => import('#controllers/auth_controller')
+const UserController = () => import('#controllers/user_controller')
 const PlaylistController = () => import('#controllers/playlist_controller')
 const TokensController = () => import('#controllers/tokens_controller')
 
@@ -33,6 +34,7 @@ router
     router.get('/tokens/spotify', [TokensController, 'spotify'])
 
     router.get('/profile', ({ inertia }) => inertia.render('profile'))
+    router.put('/profile/volume', [UserController, 'updateVolume'])
   })
   .use(middleware.auth())
 

@@ -11,7 +11,7 @@ type UserCreate = {
 }
 
 export default class AuthService {
-  createUser(params: UserCreate) {
+  async createUser(params: UserCreate) {
     return db.transaction(async (trx) => {
       const user = await User.create(params, { client: trx })
       return user

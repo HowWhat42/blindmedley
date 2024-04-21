@@ -10,6 +10,7 @@ export default class extends BaseSchema {
       table.string('title').notNullable()
       table.string('cover_url')
       table.boolean('is_public').defaultTo(false)
+      table.string('slug').notNullable().unique()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

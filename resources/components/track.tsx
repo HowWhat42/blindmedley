@@ -1,12 +1,16 @@
 import { useForm } from '@inertiajs/react'
-import { EditIcon, TrashIcon } from 'lucide-react'
+import { EditIcon, PauseIcon, PlayIcon, TrashIcon } from 'lucide-react'
 import { toast } from 'sonner'
+
+import useAudioPlayerStore from '#resources/stores/audio_player_store'
 
 import { Button } from './ui/button'
 import { TableCell, TableRow } from './ui/table'
 
 const Track = ({ playlistId, track }: { playlistId: string; track: any }) => {
   const form = useForm()
+  const { trackId, audio, playing, togglePlay, setUrl } = useAudioPlayerStore()
+
   const handleDelete = () => {
     form.delete(`/playlists/${playlistId}/remove-track`, {
       data: {
@@ -19,6 +23,14 @@ const Track = ({ playlistId, track }: { playlistId: string; track: any }) => {
         toast.error('Something went wrong')
       },
     })
+  }
+
+  const handlePlay = () => {
+    if (audio.src !== track.previewUrl) {
+      setUrl(track.previewUrl, track.id)
+    }
+
+    togglePlay()
   }
 
   return (
@@ -35,10 +47,9 @@ const Track = ({ playlistId, track }: { playlistId: string; track: any }) => {
         </a>
       </TableCell>
       <TableCell>
-        <audio controls>
-          <source src={track.previewUrl} type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
+        <Button onClick={handlePlay} size="icon" variant="ghost">
+          {playing && trackId === track.id ? <PauseIcon size={20} /> : <PlayIcon size={20} />}
+        </Button>
       </TableCell>
       <TableCell className="flex flex-col justify-center">
         <p>Artist: {track.artist}</p>

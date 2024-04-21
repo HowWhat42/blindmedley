@@ -152,9 +152,9 @@ export default class DeezerService extends MusicService {
     }
   }
 
-  async search(title: string, artist: string): Promise<SearchResult> {
+  async search(title: string, artist?: string): Promise<SearchResult> {
     const searchResult = await fetch(
-      `https://api.deezer.com/search?q=track:"${title}"artist:"${artist}"`
+      `https://api.deezer.com/search?q=track:"${title}"${artist ? `artist:"${artist}"` : ''}`
     ).then((res) => res.json() as Promise<SearchTrack>)
 
     return {

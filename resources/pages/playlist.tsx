@@ -1,4 +1,3 @@
-import type { InferPageProps } from '@adonisjs/inertia/types'
 import { Head, useForm } from '@inertiajs/react'
 import { EditIcon, ImportIcon, PlusIcon, TrashIcon, UserIcon } from 'lucide-react'
 import { toast } from 'sonner'
@@ -10,10 +9,9 @@ import PlaylistDialog from '#components/dialogs/playlist_dialog'
 import Track from '#components/track'
 import { Button } from '#components/ui/button'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '#components/ui/table'
-import type PlaylistController from '#controllers/playlist_controller'
 import { Layout } from '#resources/layouts/layout'
 
-const Playlist = ({ playlist, user }: InferPageProps<PlaylistController, 'show'>) => {
+const Playlist = ({ playlist, user }) => {
   const form = useForm()
   const onDelete = () => {
     form.delete(`/playlists/${playlist.id}`, {

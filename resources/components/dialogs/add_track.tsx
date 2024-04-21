@@ -1,17 +1,27 @@
 import { useForm } from '@inertiajs/react'
-import { Loader2Icon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-import { Button } from '../ui/button'
+import type Playlist from '#models/playlist'
+
+import SearchTrack from '../search_track'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
+import { ScrollArea } from '../ui/scroll-area'
 
-const AddTrackDialog = ({ children, playlist }: { children: React.ReactNode; playlist: any }) => {
+const AddTrackDialog = ({
+  children,
+  playlist,
+}: {
+  children: React.ReactNode
+  playlist: Playlist
+}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [title, setTitle] = useState('')
+  const [tracks, setTracks] = useState([])
   const form = useForm({
-    title: '',
+    track: null,
   })
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,6 +37,12 @@ const AddTrackDialog = ({ children, playlist }: { children: React.ReactNode; pla
         })
       },
     })
+  }
+
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value)
+    const data = await fetch(`/tracks/search?title=${e.target.value}`).then((res) => res.json())
+    setTracks(data)
   }
 
   return (
@@ -45,14 +61,19 @@ const AddTrackDialog = ({ children, playlist }: { children: React.ReactNode; pla
               type="text"
               autoCorrect="off"
               disabled={form.processing}
-              value={form.data.title}
-              onChange={(e) => form.setData('title', e.target.value)}
+              value={title}
+              onChange={handleSearch}
             />
           </div>
-
-          <Button type="submit" disabled={form.processing}>
-            {form.processing ? <Loader2Icon size={24} className="animate-spin" /> : 'Add track'}
-          </Button>
+          {title && tracks.length > 0 && (
+            <ScrollArea className="h-full max-h-96">
+              <div>
+                {tracks.map((track) => (
+                  <SearchTrack key={track.id} track={track} />
+                ))}
+              </div>
+            </ScrollArea>
+          )}
         </form>
       </DialogContent>
     </Dialog>

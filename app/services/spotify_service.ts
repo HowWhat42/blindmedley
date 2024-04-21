@@ -289,10 +289,10 @@ export default class SpotifyService extends MusicService {
     }
   }
 
-  async search(title: string, artist: string): Promise<SearchResult> {
+  async search(title: string, artist?: string): Promise<SearchResult> {
     const accessToken = await this.getAccessToken()
     const searchResult = await fetch(
-      `https://api.spotify.com/v1/search?q=track:${title}artist:${artist}&type=track`,
+      `https://api.spotify.com/v1/search?q=track:${title}${artist ? `artist:${artist}` : ''}&type=track`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

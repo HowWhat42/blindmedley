@@ -14,6 +14,7 @@ import { middleware } from './kernel.js'
 const AuthController = () => import('#controllers/auth_controller')
 const UserController = () => import('#controllers/user_controller')
 const PlaylistController = () => import('#controllers/playlist_controller')
+const TrackController = () => import('#controllers/track_controller')
 const TokensController = () => import('#controllers/tokens_controller')
 
 router
@@ -30,6 +31,8 @@ router
     router.put('/playlists/:id', [PlaylistController, 'update'])
     router.delete('/playlists/:id/remove-track', [PlaylistController, 'removeTrack'])
     router.delete('/playlists/:id', [PlaylistController, 'destroy'])
+
+    router.get('/tracks/search', [TrackController, 'search'])
 
     router.get('/tokens/spotify', [TokensController, 'spotify'])
 

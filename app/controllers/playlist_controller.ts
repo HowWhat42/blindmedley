@@ -178,6 +178,8 @@ export default class PlaylistController {
 
     const playlist = await Playlist.findOrFail(id)
 
+    console.log('playlist', trackId)
+
     await playlist.related('tracks').detach([trackId])
 
     const track = await Track.findOrFail(trackId)
@@ -187,8 +189,6 @@ export default class PlaylistController {
       await track.delete()
     }
 
-    return response.redirect().toRoute('playlists.show', {
-      id: playlist.id,
-    })
+    return response.redirect().withQs().back()
   }
 }

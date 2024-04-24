@@ -19,6 +19,6 @@ export default class UserController {
 
     await this.userService.updateVolume(volume, userId)
 
-    return response.redirect().back()
+    return response.redirect().withQs().back()
   }
 }

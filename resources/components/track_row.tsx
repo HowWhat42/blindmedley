@@ -1,5 +1,6 @@
-import { useForm } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { EditIcon, PauseIcon, PlayIcon, TrashIcon } from 'lucide-react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 import useAudioPlayerStore from '#resources/stores/audio_player_store'
@@ -8,19 +9,24 @@ import { Button } from './ui/button'
 import { TableCell, TableRow } from './ui/table'
 
 const TrackRow = ({ playlistId, track }: { playlistId: string; track: any }) => {
-  const form = useForm()
+  const [loading, setLoading] = useState(false)
   const { trackId, audio, playing, togglePlay, setUrl } = useAudioPlayerStore()
 
   const handleDelete = () => {
-    form.delete(`/playlists/${playlistId}/remove-track`, {
+    router.delete(`/playlists/${playlistId}/remove-track`, {
       data: {
         trackId: track.id,
       },
+      onStart: () => {
+        setLoading(true)
+      },
       onSuccess: () => {
         toast.success('Track removed')
+        setLoading(false)
       },
       onError: () => {
         toast.error('Something went wrong')
+        setLoading(false)
       },
     })
   }
@@ -58,10 +64,10 @@ const TrackRow = ({ playlistId, track }: { playlistId: string; track: any }) => 
       {/* <TableCell>{track.album ?? 'Single'}</TableCell> */}
       <TableCell>{track.releaseDate}</TableCell>
       <TableCell className="space-x-3 text-right">
-        <Button disabled={form.processing} size="icon" variant="secondary">
+        <Button disabled={loading} size="icon" variant="secondary">
           <EditIcon size={20} />
         </Button>
-        <Button disabled={form.processing} onClick={handleDelete} size="icon" variant="destructive">
+        <Button disabled={loading} onClick={handleDelete} size="icon" variant="destructive">
           <TrashIcon size={20} />
         </Button>
       </TableCell>

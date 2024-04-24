@@ -16,19 +16,19 @@ export default class Track extends BaseModel {
   declare artist: string
 
   @column()
-  declare release_date: string
+  declare releaseDate: string
 
   @column()
-  declare preview_url: string
+  declare previewUrl: string
 
   @column()
   declare provider: string
 
   @column()
-  declare track_url: string
+  declare trackUrl: string
 
   @column()
-  declare provider_id: string
+  declare providerId: string
 
   @column()
   declare album?: string

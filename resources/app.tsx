@@ -33,3 +33,5 @@ createInertiaApp({
     )
   },
 })
+
+/// <reference path="../../adonisrc.ts" />

@@ -1,8 +1,6 @@
 import { useForm } from '@inertiajs/react'
 import { useState } from 'react'
 
-import type Playlist from '#models/playlist'
-
 import SearchTrack from '../search_track'
 import { Button } from '../ui/button'
 import {
@@ -18,13 +16,7 @@ import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { ScrollArea } from '../ui/scroll-area'
 
-const AddTrackDialog = ({
-  children,
-  playlist,
-}: {
-  children: React.ReactNode
-  playlist: Playlist
-}) => {
+const AddTrackDialog = ({ children, playlist }: { children: React.ReactNode; playlist: any }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [tracks, setTracks] = useState([])

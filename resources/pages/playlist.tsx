@@ -1,4 +1,5 @@
-import { Head, useForm } from '@inertiajs/react'
+import type { InferPageProps } from '@adonisjs/inertia/types'
+import { Head, router, useForm } from '@inertiajs/react'
 import { EditIcon, ImportIcon, PlusIcon, TrashIcon, UserIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -6,12 +7,18 @@ import DeleteCard from '#components/delete_card'
 import AddTrackDialog from '#components/dialogs/add_track'
 import ImportPlaylistDialog from '#components/dialogs/import_playlist'
 import PlaylistDialog from '#components/dialogs/playlist_dialog'
-import Track from '#components/track'
 import { Button } from '#components/ui/button'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '#components/ui/table'
+import type PlaylistController from '#controllers/playlist_controller'
+import type User from '#models/user'
+import TrackRow from '#resources/components/track_row'
 import { Layout } from '#resources/layouts/layout'
 
-const Playlist = ({ playlist, user }) => {
+type Props = InferPageProps<PlaylistController, 'show'> & {
+  user: User
+}
+
+const Playlist = ({ playlist, tracks, user }: Props) => {
   const form = useForm()
   const onDelete = () => {
     form.delete(`/playlists/${playlist.id}`, {
@@ -73,13 +80,31 @@ const Playlist = ({ playlist, user }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {playlist.tracks.map((track: any) => (
-                <Track key={track.id} playlistId={playlist.id} track={track} />
+              {tracks.data.map((track) => (
+                <TrackRow key={track.id} playlistId={playlist.id} track={track} />
               ))}
             </TableBody>
           </Table>
-          {playlist.tracks.length === 0 && (
+          {tracks.data.length === 0 && (
             <div className="mt-4 text-center text-neutral-500">No tracks in this playlist</div>
+          )}
+        </div>
+        <div className="flex justify-end gap-2">
+          {tracks.meta.previousPageUrl && (
+            <Button
+              onClick={() =>
+                router.visit(`/playlists/${playlist.id}${tracks.meta.previousPageUrl}`)
+              }
+            >
+              Prev
+            </Button>
+          )}
+          {tracks.meta.nextPageUrl && (
+            <Button
+              onClick={() => router.visit(`/playlists/${playlist.id}${tracks.meta.nextPageUrl}`)}
+            >
+              Next
+            </Button>
           )}
         </div>
       </div>

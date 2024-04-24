@@ -23,12 +23,18 @@ export default class PlaylistController {
     })
   }
 
-  async show({ params, inertia }: HttpContext) {
+  async show({ request, inertia }: HttpContext) {
     try {
-      const playlist = await Playlist.query().where('id', params.id).preload('tracks').firstOrFail()
+      const pageNumber = request.input('page', 1)
+
+      const id = request.param('id')
+
+      const playlist = await Playlist.query().where('id', id).firstOrFail()
+      const tracks = await playlist.related('tracks').query().paginate(pageNumber, 10)
 
       return inertia.render('playlist', {
         playlist,
+        tracks,
       })
     } catch (error) {
       return inertia.render('not_found')

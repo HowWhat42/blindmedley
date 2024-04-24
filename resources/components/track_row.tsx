@@ -7,7 +7,7 @@ import useAudioPlayerStore from '#resources/stores/audio_player_store'
 import { Button } from './ui/button'
 import { TableCell, TableRow } from './ui/table'
 
-const Track = ({ playlistId, track }: { playlistId: string; track: any }) => {
+const TrackRow = ({ playlistId, track }: { playlistId: string; track: any }) => {
   const form = useForm()
   const { trackId, audio, playing, togglePlay, setUrl } = useAudioPlayerStore()
 
@@ -69,4 +69,4 @@ const Track = ({ playlistId, track }: { playlistId: string; track: any }) => {
   )
 }
 
-export default Track
+export default TrackRow

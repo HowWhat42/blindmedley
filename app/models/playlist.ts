@@ -15,7 +15,7 @@ export default class Playlist extends BaseModel {
   declare title: string
 
   @column()
-  declare cover_url: string | null
+  declare coverUrl: string | null
 
   @column()
   declare isPublic: boolean

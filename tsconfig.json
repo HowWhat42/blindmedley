@@ -26,5 +26,6 @@
       "#config/*": ["./config/*.js"],
       "#components/*": ["./resources/components/*.js"]
     }
-  }
+  },
+  "declarationDir": "types"
 }

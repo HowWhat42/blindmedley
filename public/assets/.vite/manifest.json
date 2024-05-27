@@ -1,13 +1,15 @@
 {
-  "resources/css/app.css": {
-    "file": "app-CKVbDgnN.css",
-    "src": "resources/css/app.css",
-    "isEntry": true
-  },
-  "resources/js/app.js": {
-    "file": "app-C3S-8paM.js",
+  "resources/app.tsx": {
+    "file": "app-QzBG1vsf.js",
     "name": "app",
-    "src": "resources/js/app.js",
-    "isEntry": true
+    "src": "resources/app.tsx",
+    "isEntry": true,
+    "css": [
+      "app-Cc8tgyAG.css"
+    ]
+  },
+  "resources/css/app.css": {
+    "file": "app-Cc8tgyAG.css",
+    "src": "resources/app.tsx"
   }
 }

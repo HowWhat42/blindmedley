@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../adonisrc.ts" />
+
 import './css/app.css'
 
 import { createInertiaApp } from '@inertiajs/react'
@@ -33,5 +36,3 @@ createInertiaApp({
     )
   },
 })
-
-/// <reference path="../../adonisrc.ts" />

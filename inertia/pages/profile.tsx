@@ -12,14 +12,11 @@ export default function Profile() {
     <>
       <Head title={user.userName} />
 
-      <div>
-        <ProfileCard user={user} />
-      </div>
+      <Layout user={user}>
+        <div>
+          <ProfileCard user={user} />
+        </div>
+      </Layout>
     </>
   )
-}
-
-Profile.layout = (page: any) => {
-  const { user } = page.props
-  return <Layout user={user}>{page}</Layout>
 }

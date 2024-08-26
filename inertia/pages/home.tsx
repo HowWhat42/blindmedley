@@ -12,19 +12,16 @@ export default function Home() {
     <>
       <Head title="Homepage" />
 
-      <div>
-        <div className="flex justify-between">
-          <h2>Trending Playlists</h2>
-          <PlaylistDialog user={user}>
-            <Button>Create Playlist</Button>
-          </PlaylistDialog>
+      <Layout user={user}>
+        <div>
+          <div className="flex justify-between">
+            <h2>Trending Playlists</h2>
+            <PlaylistDialog user={user}>
+              <Button>Create Playlist</Button>
+            </PlaylistDialog>
+          </div>
         </div>
-      </div>
+      </Layout>
     </>
   )
-}
-
-Home.layout = (page: any) => {
-  const { user } = page.props
-  return <Layout user={user}>{page}</Layout>
 }

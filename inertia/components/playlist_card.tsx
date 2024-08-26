@@ -1,6 +1,5 @@
 import { Link } from '@inertiajs/react'
 import { EditIcon } from 'lucide-react'
-import React from 'react'
 
 import { Button } from './ui/button'
 
@@ -14,9 +13,11 @@ const PlaylistCard = ({ playlist, edit = false }: { playlist: any; edit?: boolea
           src={playlist.cover_url ?? `https://picsum.photos/400/400?random=${playlist.id}`}
         />
         <div className="absolute bottom-0 size-full bg-black/10 opacity-0 transition-all duration-500 group-hover:opacity-100" />
-        <p className="absolute top-0 flex size-full items-center justify-center text-3xl font-black uppercase text-violet-50 opacity-0 transition-all duration-500 group-hover:opacity-100">
-          Start game
-        </p>
+        <Link href={`/games/${playlist.id}/play`}>
+          <p className="absolute top-0 flex size-full items-center justify-center text-3xl font-black uppercase text-violet-50 opacity-0 transition-all duration-500 group-hover:opacity-100">
+            Start game
+          </p>
+        </Link>
         <div className="absolute bottom-0 h-20 w-full bg-gradient-to-t from-black to-transparent" />
         <div className="absolute bottom-4 left-4 flex-col items-start justify-end">
           <p className="text-xl font-black text-violet-50 transition-all duration-300 group-hover:opacity-0">

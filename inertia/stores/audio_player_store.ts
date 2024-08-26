@@ -2,28 +2,27 @@ import { create } from 'zustand'
 
 interface AudioPlayerState {
   audio: HTMLAudioElement
-  trackId: string | null
   playing: boolean
   volume: number
-  setUrl: (url: string, id: string) => void
+  setUrl: (url: string) => void
   togglePlay: () => void
   setVolume: (volume: number) => void
 }
 
 const useAudioPlayerStore = create<AudioPlayerState>((set) => ({
   audio: new Audio(),
-  trackId: null,
   playing: false,
   volume: 0.5,
-  setUrl: (url, id) => {
+  setUrl: (url) => {
     set((state) => {
       const { audio } = state
-      if (audio.src !== url) {
-        audio.pause()
-        audio.currentTime = 0
-      }
+      audio.pause()
+      audio.currentTime = 0
       audio.src = url
-      return { audio, trackId: id, playing: false }
+
+      audio.load()
+
+      return { audio, playing: true }
     })
   },
   togglePlay: () => {

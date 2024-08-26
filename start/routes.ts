@@ -16,6 +16,7 @@ const UserController = () => import('#controllers/user_controller')
 const PlaylistController = () => import('#controllers/playlist_controller')
 const TrackController = () => import('#controllers/track_controller')
 const TokensController = () => import('#controllers/tokens_controller')
+const GameController = () => import('#controllers/game_controller')
 
 router
   .group(() => {
@@ -38,6 +39,8 @@ router
 
     router.get('/profile', ({ inertia }) => inertia.render('profile'))
     router.put('/profile/volume', [UserController, 'updateVolume'])
+
+    router.get('/games/:playlistId/play', [GameController, 'newGame'])
   })
   .use(middleware.auth())
 

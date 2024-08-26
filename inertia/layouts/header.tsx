@@ -52,7 +52,7 @@ const Header = ({ user }: { user: User }) => {
   }
 
   return (
-    <header className="fixed top-0 z-50 flex w-full items-center justify-between bg-violet-400 px-8 py-3">
+    <div className="fixed top-0 z-50 flex w-full items-center justify-between bg-violet-400 px-8 py-3">
       <Link href={'/'}>
         <h1 className="font-geist text-2xl font-bold text-neutral-900">Blindmedley</h1>
       </Link>
@@ -92,7 +92,7 @@ const Header = ({ user }: { user: User }) => {
           </PopoverContent>
         </Popover>
       </div>
-    </header>
+    </div>
   )
 }
 

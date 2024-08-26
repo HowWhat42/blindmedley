@@ -1,10 +1,12 @@
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
+
+import useUser from '~/hooks/use_user'
 
 import ProfileCard from '../components/profile_card'
 import { Layout } from '../layouts/layout'
 
 export default function Profile() {
-  const { user } = usePage<any>().props
+  const user = useUser()
 
   return (
     <>

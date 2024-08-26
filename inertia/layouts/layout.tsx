@@ -1,8 +1,10 @@
+import User from '#models/user'
+
 import Header from './header'
 
 interface Props {
   children: React.ReactNode
-  user?: any
+  user: User
 }
 
 export function Layout({ children, user }: Props) {

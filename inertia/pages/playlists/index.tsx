@@ -1,11 +1,15 @@
 import { Head } from '@inertiajs/react'
 
-import PlaylistDialog from '../components/dialogs/playlist_dialog'
-import PlaylistCard from '../components/playlist_card'
-import { Button } from '../components/ui/button'
-import { Layout } from '../layouts/layout'
+import Playlist from '#models/playlist'
+import useUser from '~/hooks/use_user'
 
-const Playlist = ({ playlists, user }: { playlists: any; user: any }) => {
+import PlaylistDialog from '../../components/dialogs/playlist_dialog'
+import PlaylistCard from '../../components/playlist_card'
+import { Button } from '../../components/ui/button'
+import { Layout } from '../../layouts/layout'
+
+const Index = ({ playlists }: { playlists: Playlist[] }) => {
+  const user = useUser()
   return (
     <>
       <Head title="Playlists" />
@@ -26,9 +30,9 @@ const Playlist = ({ playlists, user }: { playlists: any; user: any }) => {
   )
 }
 
-Playlist.layout = (page: any) => {
+Index.layout = (page: any) => {
   const { user } = page.props
   return <Layout user={user}>{page}</Layout>
 }
 
-export default Playlist
+export default Index

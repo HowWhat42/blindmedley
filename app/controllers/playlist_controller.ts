@@ -18,27 +18,23 @@ export default class PlaylistController {
   async index({ inertia }: HttpContext) {
     const playlists = await Playlist.query().withCount('tracks')
 
-    return inertia.render('playlists', {
+    return inertia.render('playlists/index', {
       playlists,
     })
   }
 
   async show({ request, inertia }: HttpContext) {
-    try {
-      const pageNumber = request.input('page', 1)
+    const pageNumber = request.input('page', 1)
 
-      const id = request.param('id')
+    const id = request.param('id')
 
-      const playlist = await Playlist.query().where('id', id).firstOrFail()
-      const tracks = await playlist.related('tracks').query().paginate(pageNumber, 10)
+    const playlist = await Playlist.query().where('id', id).firstOrFail()
+    const tracks = await playlist.related('tracks').query().paginate(pageNumber, 10)
 
-      return inertia.render('playlist', {
-        playlist,
-        tracks,
-      })
-    } catch (error) {
-      return inertia.render('not_found')
-    }
+    return inertia.render('playlists/show', {
+      playlist,
+      tracks: tracks.serialize(),
+    })
   }
 
   async store({ request, response }: HttpContext) {
@@ -119,6 +115,7 @@ export default class PlaylistController {
       await playlist.related('tracks').create(track)
     } catch (error) {
       console.error(error, track)
+      throw error
     }
   }
 

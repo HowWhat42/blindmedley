@@ -6,7 +6,7 @@ import DeezerService from '#services/deezer_service'
 import SpotifyService from '#services/spotify_service'
 
 @inject()
-export default class PlaylistController {
+export default class TrackController {
   constructor(
     private deezerService: DeezerService,
     private spotifyService: SpotifyService

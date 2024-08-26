@@ -23,7 +23,7 @@ router
     router.get('/', ({ inertia }) => inertia.render('home', { version: '6' }))
     router.get('/me', [AuthController, 'me'])
 
-    router.get('/playlists', [PlaylistController, 'index']).as('playlists')
+    router.get('/playlists', [PlaylistController, 'index']).as('playlists.index')
     router.get('/playlists/:id', [PlaylistController, 'show']).as('playlists.show')
     router.post('/playlists', [PlaylistController, 'store'])
     router.post('/playlists/:id/import', [PlaylistController, 'import'])

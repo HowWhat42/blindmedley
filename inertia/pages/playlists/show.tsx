@@ -1,26 +1,32 @@
-import type { InferPageProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { EditIcon, ImportIcon, PlusIcon, TrashIcon, UserIcon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-import type PlaylistController from '#controllers/playlist_controller'
-import type User from '#models/user'
+import Playlist from '#models/playlist'
+import Track from '#models/track'
+import useUser from '~/hooks/use_user'
 
-import DeleteCard from '../components/delete_card'
-import AddTrackDialog from '../components/dialogs/add_track'
-import ImportPlaylistDialog from '../components/dialogs/import_playlist'
-import PlaylistDialog from '../components/dialogs/playlist_dialog'
-import TrackRow from '../components/track_row'
-import { Button } from '../components/ui/button'
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '../components/ui/table'
-import { Layout } from '../layouts/layout'
+import DeleteCard from '../../components/delete_card'
+import AddTrackDialog from '../../components/dialogs/add_track'
+import ImportPlaylistDialog from '../../components/dialogs/import_playlist'
+import PlaylistDialog from '../../components/dialogs/playlist_dialog'
+import TrackRow from '../../components/track_row'
+import { Button } from '../../components/ui/button'
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../components/ui/table'
+import { Layout } from '../../layouts/layout'
 
-type Props = InferPageProps<PlaylistController, 'show'> & {
-  user: User
-}
-
-const Playlist = ({ playlist, tracks, user }: Props) => {
+const Show = ({
+  playlist,
+  tracks,
+}: {
+  playlist: Playlist
+  tracks: {
+    data: Track[]
+    meta: any
+  }
+}) => {
+  const user = useUser()
   const [loading, setLoading] = useState(false)
   const onDelete = () => {
     router.delete(`/playlists/${playlist.id}`, {
@@ -119,9 +125,9 @@ const Playlist = ({ playlist, tracks, user }: Props) => {
   )
 }
 
-Playlist.layout = (page: any) => {
+Show.layout = (page: any) => {
   const { user } = page.props
   return <Layout user={user}>{page}</Layout>
 }
 
-export default Playlist
+export default Show

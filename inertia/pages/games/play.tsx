@@ -1,5 +1,5 @@
 import { Head, useForm } from '@inertiajs/react'
-import { ArrowLeftIcon, CheckIcon, Loader2Icon, XIcon } from 'lucide-react'
+import { ArrowLeftIcon, CheckIcon, Loader2Icon, PauseIcon, PlayIcon, XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import Playlist from '#models/playlist'
@@ -16,28 +16,56 @@ import useAudioPlayerStore from '~/stores/audio_player_store'
 
 const Play = ({ playlist, tracks }: { playlist: Playlist; tracks: Track[] }) => {
   const user = useUser()
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0)
-  const [score, setScore] = useState(0)
-  const [playedTracks, setPlayedTracks] = useState<Track[]>([])
   const { audio, playing, setUrl, togglePlay } = useAudioPlayerStore()
-  const [foundArtist, setFoundArtist] = useState(false)
-  const [foundTitle, setFoundTitle] = useState(false)
+  const [state, setState] = useState<{
+    currentTrackIndex: number
+    score: number
+    playedTracks: Track[]
+    foundArtist: boolean
+    foundTitle: boolean
+  }>({
+    currentTrackIndex: 0,
+    score: 0,
+    playedTracks: [],
+    foundArtist: false,
+    foundTitle: false,
+  })
 
   useEffect(() => {
-    if (currentTrackIndex < tracks.length) {
-      setUrl(tracks[currentTrackIndex].previewUrl)
+    if (state.currentTrackIndex < tracks.length) {
+      setUrl(tracks[state.currentTrackIndex].previewUrl)
     }
-  }, [tracks, currentTrackIndex])
+  }, [tracks, state.currentTrackIndex])
 
-  audio.addEventListener('canplaythrough', () => {
-    audio.play()
-  })
-  audio.addEventListener('ended', () => {
-    togglePlay()
-    setTimeout(() => {
-      playNextTrack()
-    }, 4000)
-  })
+  useEffect(() => {
+    const handleCanPlayThrough = () => {
+      audio.play()
+    }
+
+    const handleEnded = () => {
+      togglePlay()
+      setTimeout(() => {
+        playNextTrack()
+      }, 4000)
+    }
+
+    audio.addEventListener('canplaythrough', handleCanPlayThrough)
+    audio.addEventListener('ended', handleEnded)
+
+    return () => {
+      audio.removeEventListener('canplaythrough', handleCanPlayThrough)
+      audio.removeEventListener('ended', handleEnded)
+    }
+  }, [audio, togglePlay])
+
+  useEffect(() => {
+    if (state.foundTitle && state.foundArtist) {
+      togglePlay()
+      setTimeout(() => {
+        playNextTrack()
+      }, 4000)
+    }
+  }, [state.foundTitle, state.foundArtist])
 
   const form = useForm({ guess: '' })
 
@@ -46,8 +74,8 @@ const Play = ({ playlist, tracks }: { playlist: Playlist; tracks: Track[] }) => 
 
     form.processing = true
 
-    const track = tracks[currentTrackIndex]
-    let newScore = score
+    const track = tracks[state.currentTrackIndex]
+    let newScore = state.score
 
     const sanitizedGuess = textSanitizer(form.data.guess)
 
@@ -57,37 +85,37 @@ const Play = ({ playlist, tracks }: { playlist: Playlist; tracks: Track[] }) => 
     const titleLevenshteinDistance = levenshtein(sanitizedTitle, sanitizedGuess)
     const artistLevenshteinDistance = levenshtein(sanitizedArtist, sanitizedGuess)
 
-    if (titleLevenshteinDistance < 3) {
-      setFoundTitle(true)
+    const foundTitle = titleLevenshteinDistance < 3
+    const foundArtist = artistLevenshteinDistance < 3
+
+    if (foundTitle) {
       newScore += 30
     }
 
-    if (artistLevenshteinDistance < 3) {
-      setFoundArtist(true)
+    if (foundArtist) {
       newScore += 30
     }
 
     form.setData('guess', '')
-    setScore(newScore)
+    setState((prevState) => ({
+      ...prevState,
+      score: newScore,
+      foundTitle: prevState.foundTitle ? prevState.foundTitle : foundTitle,
+      foundArtist: prevState.foundArtist ? prevState.foundArtist : foundArtist,
+    }))
 
     form.processing = false
   }
 
   const playNextTrack = () => {
-    setFoundArtist(false)
-    setFoundTitle(false)
-    setPlayedTracks([...playedTracks, tracks[currentTrackIndex]])
-    setCurrentTrackIndex((prev) => prev + 1)
+    setState((prevState) => ({
+      ...prevState,
+      foundArtist: false,
+      foundTitle: false,
+      playedTracks: [...prevState.playedTracks, tracks[prevState.currentTrackIndex]],
+      currentTrackIndex: prevState.currentTrackIndex + 1,
+    }))
   }
-
-  useEffect(() => {
-    if (foundTitle && foundArtist) {
-      togglePlay()
-      setTimeout(() => {
-        playNextTrack()
-      }, 4000)
-    }
-  }, [foundTitle, foundArtist])
 
   const onLeave = () => {
     togglePlay()
@@ -109,27 +137,32 @@ const Play = ({ playlist, tracks }: { playlist: Playlist; tracks: Track[] }) => 
                   Playlist : {playlist.title}
                 </h1>
                 <p className="text-center font-light text-slate-500">
-                  {currentTrackIndex + 1} / {tracks.length}
+                  {state.currentTrackIndex + 1} / {tracks.length}
                 </p>
               </div>
             </div>
             <div className="h-72">
-              {playing ? <Timer audio={audio} /> : <Song track={tracks[currentTrackIndex]} />}
+              {playing ? <Timer audio={audio} /> : <Song track={tracks[state.currentTrackIndex]} />}
             </div>
 
-            <div className="mb-4 flex items-center justify-center rounded-3xl bg-slate-700">
-              <p className="bg-gradient-to-br from-purple-300 via-purple-600 to-blue-500 bg-clip-text px-16 py-4 text-xl font-bold text-transparent">
-                {score} {score < 2 ? 'pt' : 'pts'}
-              </p>
+            <div className="mb-4 flex items-center justify-center gap-4">
+              <div className="flex items-center justify-center rounded-3xl bg-slate-700">
+                <p className="bg-gradient-to-br from-purple-300 via-purple-600 to-blue-500 bg-clip-text px-16 py-4 text-xl font-bold text-transparent">
+                  {state.score} {state.score < 2 ? 'pt' : 'pts'}
+                </p>
+              </div>
+              <button onClick={togglePlay}>
+                {playing ? <PauseIcon size={24} /> : <PlayIcon size={24} />}
+              </button>
             </div>
             <div className="flex items-center justify-center gap-16">
               <div className="flex items-center">
                 <p className="text-center text-xl font-bold text-slate-700">Artist :</p>
-                {foundArtist ? <CheckIcon size={24} /> : <XIcon size={24} />}
+                {state.foundArtist ? <CheckIcon size={24} /> : <XIcon size={24} />}
               </div>
               <div className="flex items-center">
                 <p className="text-center text-xl font-bold text-slate-700">Title :</p>
-                {foundTitle ? <CheckIcon size={24} /> : <XIcon size={24} />}
+                {state.foundTitle ? <CheckIcon size={24} /> : <XIcon size={24} />}
               </div>
             </div>
             <form onSubmit={tryGuess} className="w-full space-y-4">
@@ -151,11 +184,11 @@ const Play = ({ playlist, tracks }: { playlist: Playlist; tracks: Track[] }) => 
                 {form.processing ? <Loader2Icon size={24} className="animate-spin" /> : 'Check'}
               </Button>
             </form>
-            {playedTracks.length > 0 && (
+            {state.playedTracks.length > 0 && (
               <div className="px-4">
                 <h2 className="text-lg font-bold text-slate-700">Previous songs :</h2>
                 <div className="flex flex-col">
-                  {playedTracks.map((track, idx) => (
+                  {state.playedTracks.map((track, idx) => (
                     <Song inline track={track} key={idx} />
                   ))}
                 </div>
